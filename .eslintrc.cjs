@@ -60,19 +60,36 @@ module.exports = {
       },
     },
     {
-      files: ['logger.ts'],
+      files: ['**/CE_*.ts'],
+      rules: {
+        '@typescript-eslint/no-redeclare': ['off'],
+        '@typescript-eslint/naming-convention': ['off'],
+      },
+    },
+    {
+      files: [
+        'src/winston/WinstonContainer.ts',
+        'src/winston/interfaces/IWintonLogger.ts',
+        'src/pino/PinoContainer.ts',
+        'src/pino/interfaces/IPinoLogger.ts',
+      ],
       rules: {
         '@typescript-eslint/no-explicit-any': ['off'],
-        '@typescript-eslint/no-unsafe-argument': ['off'],
-        '@typescript-eslint/no-non-null-assertion': ['off'],
-        '@typescript-eslint/no-unsafe-call': ['off'],
         '@typescript-eslint/no-unsafe-assignment': ['off'],
+        '@typescript-eslint/no-unsafe-argument': ['off'],
+      },
+    },
+    {
+      files: ['src/pino/interfaces/IPinoContainerOption.ts'],
+      rules: {
+        '@typescript-eslint/no-redundant-type-constituents': ['off'],
       },
     },
     {
       files: ['**/__tests__/*.ts'],
       rules: {
         '@typescript-eslint/no-unsafe-assignment': ['off'],
+        '@typescript-eslint/consistent-type-imports': ['off'],
         'no-console': ['off'],
       },
     },

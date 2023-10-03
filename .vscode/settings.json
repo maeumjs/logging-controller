@@ -17,6 +17,7 @@
     "**/dist": true
   },
   "git.ignoreLimitWarning": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
   "search.exclude": {
     "**/node_modules": true,
     "**/bower_components": true,
@@ -34,7 +35,5 @@
   "formattingToggle.affects": ["editor.formatOnSave"],
   "jest.autoRun": {
     "watch": false
-    // "onStartup": ["all-tests"],
-    // "onSave": "test-src-file"
   }
 }
