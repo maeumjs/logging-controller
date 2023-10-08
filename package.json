@@ -1,7 +1,7 @@
 {
   "name": "@maeum/logging-controller",
-  "version": "1.0.0",
-  "description": "maeum framework logging controller",
+  "version": "1.0.0-beta.0",
+  "description": "maeum logging controller",
   "engines": {
     "node": ">=18"
   },
@@ -25,6 +25,7 @@
     "unpub": "pnpm unpublish @maeum/logging-controller@$npm_package_version --registry http://localhost:8901 --force",
     "pub:prod": "RELEASE_MODE=true pnpm publish",
     "dd": "deps-diff md -d prod -d dev --title-list-type '*' --deps-list-type '*' --content-list-type '*'",
+    "prepublishOnly": "node prepublish.cjs",
     "prepare": "husky install"
   },
   "repository": {

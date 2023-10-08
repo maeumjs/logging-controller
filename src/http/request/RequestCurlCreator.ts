@@ -5,22 +5,30 @@ import type { FastifyRequest } from 'fastify';
 import { createFromFastify3, encodeQuerystring } from 'jin-curlize';
 
 export default class RequestCurlCreator {
+  static #it: RequestCurlCreator;
+
+  static #isBootstrap: boolean = false;
+
+  static get it() {
+    return RequestCurlCreator.#it;
+  }
+
+  static get isBootstrap() {
+    return RequestCurlCreator.#isBootstrap;
+  }
+
   public static querystringReplacer(qs: URLSearchParams): URLSearchParams {
     const next = new URLSearchParams(qs);
     next.set('tid', `'"$(uuidgen)"'`);
     return encodeQuerystring(next);
   }
 
-  static #it: RequestCurlCreator;
-
-  static get it() {
-    return RequestCurlCreator.#it;
-  }
-
   static bootstrap(nullableOption?: Parameters<typeof getRequestCurlCreatorOption>[0]) {
     const option = getRequestCurlCreatorOption(nullableOption);
     RequestCurlCreator.#it = new RequestCurlCreator(option);
-    return nullableOption;
+    RequestCurlCreator.#isBootstrap = true;
+
+    return option;
   }
 
   #option: IRequestCurlCreatorOption;

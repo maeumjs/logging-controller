@@ -80,6 +80,12 @@ module.exports = {
       },
     },
     {
+      files: ['src/http/request/RequestLogger.ts'],
+      rules: {
+        '@typescript-eslint/no-floating-promises': ['off'],
+      },
+    },
+    {
       files: ['src/pino/interfaces/IPinoContainerOption.ts'],
       rules: {
         '@typescript-eslint/no-redundant-type-constituents': ['off'],

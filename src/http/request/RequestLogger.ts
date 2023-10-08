@@ -24,8 +24,14 @@ import { isPromise } from 'node:util/types';
 export default class RequestLogger {
   static #it: RequestLogger;
 
+  static #isBootstrap: boolean = false;
+
   static get it() {
     return RequestLogger.#it;
+  }
+
+  static get isBootstrap() {
+    return RequestLogger.#isBootstrap;
   }
 
   static async getPayload(
@@ -73,21 +79,15 @@ export default class RequestLogger {
   static bootstrap(nullableOption?: Parameters<typeof getRequestLoggerOption>[0]) {
     const option = getRequestLoggerOption(nullableOption);
     RequestLogger.#it = new RequestLogger(option);
+    RequestLogger.#isBootstrap = true;
 
     return nullableOption;
   }
 
   #option: IRequestLoggerOption;
 
-  #bootstrap: boolean = false;
-
   constructor(option: IRequestLoggerOption) {
     this.#option = option;
-    this.#bootstrap = true;
-  }
-
-  get bootstrap(): boolean {
-    return this.#bootstrap;
   }
 
   async logging(req: FastifyRequest, reply: FastifyReply) {
@@ -200,7 +200,6 @@ export default class RequestLogger {
     ) {
       const isPayloadLogging = options.#option.isReplyPayloadLogging;
 
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       fastify.register(requestFlagsPlugin);
 
       fastify.addHook('onSend', (_req, reply, payload, done) => {

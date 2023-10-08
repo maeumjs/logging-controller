@@ -15,7 +15,7 @@ import { isError } from 'my-easy-fp';
 import { basenames } from 'my-node-fp';
 import inspector from 'node:inspector';
 import path from 'node:path';
-import { pino } from 'pino';
+import { pino, type LevelWithSilent } from 'pino';
 import type { LastArrayElement } from 'type-fest';
 
 type TPinoLoggerApplication = {
@@ -148,6 +148,81 @@ export default class PinoContainer {
     PinoContainer.#isBootstrap = true;
 
     return option;
+  }
+
+  public static getLogMethod(level: LevelWithSilent, logger: pino.Logger) {
+    switch (level) {
+      case 'fatal':
+        return logger.fatal;
+      case 'error':
+        return logger.error;
+      case 'warn':
+        return logger.warn;
+      case 'info':
+        return logger.info;
+      case 'debug':
+        return logger.debug;
+      case 'trace':
+        return logger.trace;
+      default:
+        return logger.debug;
+    }
+  }
+
+  public static l(rawName: string, rawFullname?: string): Readonly<IPinoLogger> {
+    const { name, fullname } =
+      rawFullname == null
+        ? { name: CE_DEFAULT_VALUE.APPLICATION_NAME, fullname: rawName }
+        : { name: rawName, fullname: rawFullname };
+    const filename = basenames(fullname, ['.ts', '.tsx', '.mts', '.cts']);
+
+    const doLogging = (level: LevelWithSilent, content: Partial<ILogFormat & { err: Error }>) => {
+      const debugLogger = ll(process.env.DEBUG, filename, PinoContainer.#it.#option.develop());
+      const application = PinoContainer.#it.#loggers[name];
+
+      if (application == null) {
+        throw new Error(`Logging application([${name}]) does not exists`);
+      }
+
+      if (!PinoContainer.#isBootstrap) {
+        throw new Error(`WinstonContainer not bootstrapped`);
+      }
+
+      try {
+        const status = content.status ?? httpStatusCodes.OK;
+        const id = content.id ?? 'SYS';
+        const func = PinoContainer.getLogMethod(level, application.logger);
+
+        func('', {
+          ...content,
+          status,
+          id,
+          filename,
+          ...getError(content),
+          body: content.body,
+        });
+      } catch (catched) {
+        const err = isError(catched, new Error(`unknown error raised from ${__filename}`));
+        debugLogger(err.message); // eslint-disable-line
+        debugLogger(err.stack); // eslint-disable-line
+      }
+    };
+
+    return {
+      $kind: 'pino',
+      fatal: (content: Partial<ILogFormat>) => doLogging('fatal', content),
+      error: (content: Partial<ILogFormat>) => doLogging('error', content),
+      warn: (content: Partial<ILogFormat>) => doLogging('warn', content),
+      info: (content: Partial<ILogFormat>) => doLogging('info', content),
+      debug: (content: Partial<ILogFormat>) => doLogging('debug', content),
+      trace: (content: Partial<ILogFormat>) => doLogging('trace', content),
+      silent: (content: Partial<ILogFormat>) => doLogging('silent', content),
+      $: (...args: any[]) => {
+        const debugLogger = ll(process.env.DEBUG, filename, false);
+        const [first, ...body] = args;
+        debugLogger(first, ...body);
+      },
+    };
   }
 
   #option: ILogContainerOption;
