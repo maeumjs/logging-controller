@@ -3,11 +3,13 @@ import getError from '#/common/modules/getError';
 import { CE_LOGGING_ACTION_CODE } from '#/http/const-enum/CE_LOGGING_ACTION_CODE';
 import { CE_REQUEST_LOGGING_RESULT_CODE } from '#/http/const-enum/CE_REQUEST_LOGGING_RESULT_CODE';
 import type IRequestLoggerOption from '#/http/interfaces/IRequestLoggerOption';
-import getExcludeRoutePathKey from '#/http/modules/getExcludeRoutePathKey';
+import getHttpMethod from '#/http/modules/getHttpMethod';
 import getRequestLoggerOption from '#/http/modules/getRequestLoggerOption';
+import getRoutePathKey from '#/http/modules/getRoutePathKey';
 import requestFlagsPlugin from '#/http/plugin/requestFlagsPlugin';
 import RequestCurlCreator from '#/http/request/RequestCurlCreator';
-import getHttpMethod from '#/winston/modules/getHttpMethod';
+import { getValidationErrorSummary } from '@maeum/tools';
+import type { ErrorObject } from 'ajv';
 import formatISO from 'date-fns/formatISO';
 import type {
   FastifyInstance,
@@ -32,6 +34,13 @@ export default class RequestLogger {
 
   static get isBootstrap() {
     return RequestLogger.#isBootstrap;
+  }
+
+  static getErrorLog(err: Error & { validation?: ErrorObject[]; option?: { logging?: unknown } }) {
+    const validation =
+      err.validation != null ? getValidationErrorSummary(err.validation) : undefined;
+    const logging = err?.option?.logging;
+    return { validation, logging };
   }
 
   static async getPayload(
@@ -62,10 +71,10 @@ export default class RequestLogger {
 
         return data;
       case CE_LOGGING_ACTION_CODE.OBJECTIFY:
-        if (option.compress != null && data != null) {
+        if (option.objectify != null && data != null) {
           const promise = option.objectify(data);
-          const compressed = isPromise(promise) ? await promise : promise;
-          return compressed;
+          const objectified = isPromise(promise) ? await promise : promise;
+          return objectified;
         }
 
         return data;
@@ -102,22 +111,25 @@ export default class RequestLogger {
       const route = { routePath: req.routeOptions.url, method: req.method };
 
       // exclude check
-      if (this.#option.excludes.get(getExcludeRoutePathKey(route))) {
+      if (this.#option.excludes.get(getRoutePathKey(route))) {
         return CE_REQUEST_LOGGING_RESULT_CODE.REQUEST_URL_INCLUDED_IN_EXCLUDES;
       }
 
       // include check
-      if (!this.#option.includes.get(getExcludeRoutePathKey(route))) {
+      if (!this.#option.includes.get(getRoutePathKey(route))) {
         return CE_REQUEST_LOGGING_RESULT_CODE.REQUEST_URL_NOT_INCLUDED_IN_INCLUDES;
       }
 
       const err = req.getRequestError();
 
       const action =
-        this.#option.contents.actions.get(getExcludeRoutePathKey(route)) ??
-        this.#option.contents.default;
+        this.#option.contents.actions.get(getRoutePathKey(route)) ?? this.#option.contents.default;
 
-      const handler = this.#option.contents.handlers.get(getExcludeRoutePathKey(route));
+      const handler = this.#option.contents.handlers.get(getRoutePathKey(route));
+      const { validation, logging } =
+        err != null
+          ? RequestLogger.getErrorLog(err)
+          : { validation: undefined, logging: undefined };
 
       const content: ILogFormat = {
         id: this.#option.getLogId(route),
@@ -131,25 +143,25 @@ export default class RequestLogger {
           url: req.raw.url ?? '/http/logging/unknown',
           curl: this.#option.isCurl ? RequestCurlCreator.it.create(req, route) : undefined,
           request: {
-            queries: RequestLogger.getPayload(
+            queries: await RequestLogger.getPayload(
               req.query,
               action.request.querystring,
               handler?.request.querystring,
               this.#option,
             ),
-            headers: RequestLogger.getPayload(
+            headers: await RequestLogger.getPayload(
               req.headers,
               action.request.headers,
               handler?.request.headers as (data: unknown) => string,
               this.#option,
             ),
-            params: RequestLogger.getPayload(
+            params: await RequestLogger.getPayload(
               req.params,
               action.request.params,
               handler?.request.params as (data: unknown) => string,
               this.#option,
             ),
-            body: RequestLogger.getPayload(
+            body: await RequestLogger.getPayload(
               req.body,
               action.request.body,
               handler?.request.body as (data: unknown) => string,
@@ -157,13 +169,13 @@ export default class RequestLogger {
             ),
           },
           reply: {
-            headers: RequestLogger.getPayload(
+            headers: await RequestLogger.getPayload(
               reply.getHeaders(),
               action.reply.headers,
               handler?.reply.headers as (data: unknown) => string,
               this.#option,
             ),
-            payload: RequestLogger.getPayload(
+            payload: await RequestLogger.getPayload(
               reply.getReplyPayload(),
               action.reply.payload,
               handler?.reply.payload as (data: unknown) => string,
@@ -172,6 +184,15 @@ export default class RequestLogger {
           },
         },
       };
+
+      if (logging != null || validation != null) {
+        (content.body as Record<string, unknown>).additional = await RequestLogger.getPayload(
+          { logging, validation },
+          action.other,
+          handler?.other,
+          this.#option,
+        );
+      }
 
       if (reply.statusCode >= 400) {
         this.#option.logger.$(content);

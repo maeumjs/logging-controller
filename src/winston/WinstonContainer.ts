@@ -268,7 +268,7 @@ export default class WinstonContainer {
         ? { name: CE_DEFAULT_VALUE.APPLICATION_NAME, fullname: rawName }
         : { name: rawName, fullname: rawFullname };
     const filename = basenames(fullname, ['.ts', '.tsx', '.mts', '.cts']);
-    const debugLogger = ll(process.env.DEBUG, filename, this.#option.develop());
+    const debugLogger = ll(process.env.DEBUG_CHANNEL, filename, this.#option.develop());
     const application = this.#loggers[name];
 
     if (application == null) {
