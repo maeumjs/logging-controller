@@ -24,6 +24,10 @@ describe('getRequestLoggerOption', () => {
       isReplyPayloadLogging: true,
       logger: WinstonContainer.it.logging('request-logger'),
       excludes: new Map<string, boolean>([['/health', false]]),
+      includes: new Map<string, boolean>([
+        ['/health', true],
+        ['/error', true],
+      ]),
       contents: {
         default: {
           request: {

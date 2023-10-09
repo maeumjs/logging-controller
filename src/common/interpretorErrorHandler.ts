@@ -1,6 +1,6 @@
 import getBootstrapedLogger from '#/common/modules/getBootstrapedLogger';
 
-export default function unhandleCatcher() {
+export default function interpretorErrorHandler() {
   const logger = getBootstrapedLogger('unhandle-exception');
 
   process.on('uncaughtException', (err) => {

@@ -1,4 +1,4 @@
-import unhandleCatcher from '#/common/unhandleCatcher';
+import interpretorErrorHandler from '#/common/interpretorErrorHandler';
 import type getRequestCurlCreatorOption from '#/http/modules/getRequestCurlCreatorOption';
 import type getRequestLoggerOption from '#/http/modules/getRequestLoggerOption';
 import RequestCurlCreator from '#/http/request/RequestCurlCreator';
@@ -8,7 +8,7 @@ import type getPinoContainerOption from '#/pino/modules/getPinoContainerOption';
 import WinstonContainer from '#/winston/WinstonContainer';
 import type getWinstonContainerOption from '#/winston/modules/getWinstonContainerOption';
 
-export function winston<T extends boolean>(
+export function bootstrapWinston<T extends boolean>(
   async: T,
   option?: {
     winston?: Parameters<typeof getWinstonContainerOption>[0];
@@ -16,7 +16,7 @@ export function winston<T extends boolean>(
     curl?: Parameters<typeof getRequestCurlCreatorOption>[0];
   },
 ): T extends true ? Promise<boolean> : boolean;
-export function winston<T extends boolean>(
+export function bootstrapWinston<T extends boolean>(
   async: T,
   option?: {
     winston?: Parameters<typeof getWinstonContainerOption>[0];
@@ -29,7 +29,7 @@ export function winston<T extends boolean>(
       await WinstonContainer.bootstrap(true, option?.winston);
       RequestLogger.bootstrap(option?.request);
       RequestCurlCreator.bootstrap(option?.curl);
-      unhandleCatcher();
+      interpretorErrorHandler();
       return true;
     })();
   }
@@ -37,11 +37,11 @@ export function winston<T extends boolean>(
   WinstonContainer.bootstrap(false, option?.winston);
   RequestLogger.bootstrap(option?.request);
   RequestCurlCreator.bootstrap(option?.curl);
-  unhandleCatcher();
+  interpretorErrorHandler();
   return false;
 }
 
-export function pino<T extends boolean>(
+export function bootstrapPino<T extends boolean>(
   async: T,
   option?: {
     pino?: Parameters<typeof getPinoContainerOption>[0];
@@ -49,7 +49,7 @@ export function pino<T extends boolean>(
     curl?: Parameters<typeof getRequestCurlCreatorOption>[0];
   },
 ): T extends true ? Promise<boolean> : boolean;
-export function pino<T extends boolean>(
+export function bootstrapPino<T extends boolean>(
   async: T,
   option?: {
     pino?: Parameters<typeof getPinoContainerOption>[0];
@@ -62,14 +62,14 @@ export function pino<T extends boolean>(
       await PinoContainer.bootstrap(true, option?.pino);
       RequestLogger.bootstrap(option?.request);
       RequestCurlCreator.bootstrap(option?.curl);
-      unhandleCatcher();
+      interpretorErrorHandler();
       return true;
     })();
   }
 
-  WinstonContainer.bootstrap(false, option?.pino);
+  PinoContainer.bootstrap(false, option?.pino);
   RequestLogger.bootstrap(option?.request);
   RequestCurlCreator.bootstrap(option?.curl);
-  unhandleCatcher();
+  interpretorErrorHandler();
   return false;
 }

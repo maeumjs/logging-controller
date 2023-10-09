@@ -20,6 +20,7 @@ export default function getRequestLoggerOption(
   const isCurl = option?.isCurl ?? true;
   const isReplyPayloadLogging = option?.isReplyPayloadLogging ?? false;
   const excludes = option?.excludes ?? new Map<string, boolean>();
+  const includes = option?.includes ?? new Map<string, boolean>();
   const contentsDefault: IHTTPLogRecordAction = {
     request: {
       querystring:
@@ -44,6 +45,7 @@ export default function getRequestLoggerOption(
     isCurl,
     isReplyPayloadLogging,
     excludes,
+    includes,
     logger,
     contents: {
       default: contentsDefault,
