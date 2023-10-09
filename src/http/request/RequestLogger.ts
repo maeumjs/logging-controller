@@ -99,7 +99,7 @@ export default class RequestLogger {
 
       req.setRequestLogging();
 
-      const route = { routePath: req.routerPath, method: req.method };
+      const route = { routePath: req.routeOptions.url, method: req.method };
 
       // exclude check
       if (this.#option.excludes.get(getExcludeRoutePathKey(route))) {
