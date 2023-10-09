@@ -177,7 +177,11 @@ export default class PinoContainer {
     const filename = basenames(fullname, ['.ts', '.tsx', '.mts', '.cts']);
 
     const doLogging = (level: LevelWithSilent, content: Partial<ILogFormat & { err: Error }>) => {
-      const debugLogger = ll(process.env.DEBUG, filename, PinoContainer.#it.#option.develop());
+      const debugLogger = ll(
+        process.env.DEBUG_CHANNEL,
+        filename,
+        PinoContainer.#it.#option.develop(),
+      );
       const application = PinoContainer.#it.#loggers[name];
 
       if (application == null) {

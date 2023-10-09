@@ -12,4 +12,6 @@ export default interface IHTTPLogRecordHandler {
     headers: (headers: ReturnType<FastifyReply['getHeaders']>) => string;
     payload: (payload: unknown) => string;
   };
+
+  other: (payload: unknown) => string;
 }

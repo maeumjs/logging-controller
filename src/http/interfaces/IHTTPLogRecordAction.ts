@@ -12,4 +12,6 @@ export default interface IHTTPLogRecordAction {
     headers: CE_LOGGING_ACTION_CODE;
     payload: CE_LOGGING_ACTION_CODE;
   };
+
+  other: CE_LOGGING_ACTION_CODE;
 }

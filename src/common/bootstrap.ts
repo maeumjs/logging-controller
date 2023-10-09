@@ -1,28 +1,18 @@
+import type IPinoLoggingControllerOption from '#/common/interfaces/IPinoLoggingControllerOption';
+import type IWinstonLoggingControllerOption from '#/common/interfaces/IWinstonLoggingControllerOption';
 import interpretorErrorHandler from '#/common/interpretorErrorHandler';
-import type getRequestCurlCreatorOption from '#/http/modules/getRequestCurlCreatorOption';
-import type getRequestLoggerOption from '#/http/modules/getRequestLoggerOption';
 import RequestCurlCreator from '#/http/request/RequestCurlCreator';
 import RequestLogger from '#/http/request/RequestLogger';
 import PinoContainer from '#/pino/PinoContainer';
-import type getPinoContainerOption from '#/pino/modules/getPinoContainerOption';
 import WinstonContainer from '#/winston/WinstonContainer';
-import type getWinstonContainerOption from '#/winston/modules/getWinstonContainerOption';
 
 export function bootstrapWinston<T extends boolean>(
   async: T,
-  option?: {
-    winston?: Parameters<typeof getWinstonContainerOption>[0];
-    request?: Parameters<typeof getRequestLoggerOption>[0];
-    curl?: Parameters<typeof getRequestCurlCreatorOption>[0];
-  },
+  option?: IWinstonLoggingControllerOption,
 ): T extends true ? Promise<boolean> : boolean;
 export function bootstrapWinston<T extends boolean>(
   async: T,
-  option?: {
-    winston?: Parameters<typeof getWinstonContainerOption>[0];
-    request?: Parameters<typeof getRequestLoggerOption>[0];
-    curl?: Parameters<typeof getRequestCurlCreatorOption>[0];
-  },
+  option?: IWinstonLoggingControllerOption,
 ): Promise<boolean> | boolean {
   if (async) {
     return (async () => {
@@ -43,19 +33,11 @@ export function bootstrapWinston<T extends boolean>(
 
 export function bootstrapPino<T extends boolean>(
   async: T,
-  option?: {
-    pino?: Parameters<typeof getPinoContainerOption>[0];
-    request?: Parameters<typeof getRequestLoggerOption>[0];
-    curl?: Parameters<typeof getRequestCurlCreatorOption>[0];
-  },
+  option?: IPinoLoggingControllerOption,
 ): T extends true ? Promise<boolean> : boolean;
 export function bootstrapPino<T extends boolean>(
   async: T,
-  option?: {
-    pino?: Parameters<typeof getPinoContainerOption>[0];
-    request?: Parameters<typeof getRequestLoggerOption>[0];
-    curl?: Parameters<typeof getRequestCurlCreatorOption>[0];
-  },
+  option?: IPinoLoggingControllerOption,
 ): Promise<boolean> | boolean {
   if (async) {
     return (async () => {

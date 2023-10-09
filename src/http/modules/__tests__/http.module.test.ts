@@ -40,6 +40,7 @@ describe('getRequestLoggerOption', () => {
             headers: CE_LOGGING_ACTION_CODE.STRINGIFY,
             payload: CE_LOGGING_ACTION_CODE.STRINGIFY,
           },
+          other: CE_LOGGING_ACTION_CODE.STRINGIFY,
         },
         actions: new Map<string, IHTTPLogRecordAction>(),
         handlers: new Map<string, IHTTPLogRecordHandler>(),

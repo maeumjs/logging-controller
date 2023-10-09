@@ -7,9 +7,12 @@ import type IFastMakerRoutePath from '#/http/interfaces/IFastMakerRoutePath';
 import type IHTTPLogRecordAction from '#/http/interfaces/IHTTPLogRecordAction';
 import type IHTTPLogRecordHandler from '#/http/interfaces/IHTTPLogRecordHandler';
 import type IRequestLoggerOption from '#/http/interfaces/IRequestLoggerOption';
+import type { PartialDeep } from 'type-fest';
 
 export default function getRequestLoggerOption(
-  option?: Partial<IRequestLoggerOption>,
+  option?: PartialDeep<Omit<IRequestLoggerOption, 'logger'>> & {
+    logger?: IRequestLoggerOption['logger'];
+  },
 ): IRequestLoggerOption {
   const getLogId =
     option?.getLogId != null
@@ -24,15 +27,16 @@ export default function getRequestLoggerOption(
   const contentsDefault: IHTTPLogRecordAction = {
     request: {
       querystring:
-        option?.contents?.default?.request.querystring ?? CE_LOGGING_ACTION_CODE.OBJECTIFY,
-      headers: option?.contents?.default?.request.headers ?? CE_LOGGING_ACTION_CODE.OBJECTIFY,
-      params: option?.contents?.default?.request.params ?? CE_LOGGING_ACTION_CODE.OBJECTIFY,
-      body: option?.contents?.default?.request.body ?? CE_LOGGING_ACTION_CODE.OBJECTIFY,
+        option?.contents?.default?.request?.querystring ?? CE_LOGGING_ACTION_CODE.OBJECTIFY,
+      headers: option?.contents?.default?.request?.headers ?? CE_LOGGING_ACTION_CODE.OBJECTIFY,
+      params: option?.contents?.default?.request?.params ?? CE_LOGGING_ACTION_CODE.OBJECTIFY,
+      body: option?.contents?.default?.request?.body ?? CE_LOGGING_ACTION_CODE.OBJECTIFY,
     },
     reply: {
-      headers: option?.contents?.default?.reply.headers ?? CE_LOGGING_ACTION_CODE.NOT_LOGGING,
-      payload: option?.contents?.default?.reply.payload ?? CE_LOGGING_ACTION_CODE.NOT_LOGGING,
+      headers: option?.contents?.default?.reply?.headers ?? CE_LOGGING_ACTION_CODE.NOT_LOGGING,
+      payload: option?.contents?.default?.reply?.payload ?? CE_LOGGING_ACTION_CODE.NOT_LOGGING,
     },
+    other: option?.contents?.default?.other ?? CE_LOGGING_ACTION_CODE.OBJECTIFY,
   };
   const level = option?.level ?? 'info';
   const stringify = option?.stringify ?? ((data: unknown) => safeStringify(data));

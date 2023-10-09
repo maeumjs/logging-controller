@@ -1,5 +1,5 @@
 export default function getDebugChannel(channel: unknown) {
-  if (typeof channel === 'string' && channel != null && channel !== '') {
+  if (channel != null && typeof channel === 'string' && channel !== '') {
     return channel;
   }
 
