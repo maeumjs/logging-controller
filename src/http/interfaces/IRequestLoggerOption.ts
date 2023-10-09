@@ -15,10 +15,16 @@ export default interface IRequestLoggerOption {
   isReplyPayloadLogging: boolean;
 
   /**
-   * Request를 기록하지 않을 라우팅 주소를 설정합니다
-   * specify a routing path to not log
+   * includes 항목에 정의된 라우팅 주소 중에 로그를 기록하지 않을 라우팅 주소를 설정합니다
+   * specify which of the routing paths specified in the `includes` field will not be logged
    * */
   excludes: Map<string, boolean>;
+
+  /**
+   * Request를 기록할 라우팅 주소를 설정합니다
+   * specify a routing path to log
+   * */
+  includes: Map<string, boolean>;
 
   /**
    * logger, winston or pino

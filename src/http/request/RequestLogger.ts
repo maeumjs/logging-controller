@@ -106,6 +106,11 @@ export default class RequestLogger {
         return CE_REQUEST_LOGGING_RESULT_CODE.REQUEST_URL_INCLUDED_IN_EXCLUDES;
       }
 
+      // include check
+      if (!this.#option.includes.get(getExcludeRoutePathKey(route))) {
+        return CE_REQUEST_LOGGING_RESULT_CODE.REQUEST_URL_NOT_INCLUDED_IN_INCLUDES;
+      }
+
       const err = req.getRequestError();
 
       const action =
