@@ -260,7 +260,7 @@ describe('createLogger', () => {
 
     await WinstonContainer.bootstrap(true, option);
 
-    const log = WinstonContainer.it.logging('iamfilename');
+    const log = WinstonContainer.l('iamfilename');
 
     log.$('test');
     log.emerg({ err: new Error('test') });
@@ -293,7 +293,7 @@ describe('createLogger', () => {
 
     WinstonContainer.bootstrap(false, option);
 
-    const log = WinstonContainer.it.logging('app', 'iamfilename');
+    const log = WinstonContainer.l('app', 'iamfilename');
     log.$('test');
 
     expect(WinstonContainer.it).toBeTruthy();
@@ -315,7 +315,8 @@ describe('createLogger', () => {
     WinstonContainer.bootstrap(false, option);
 
     expect(() => {
-      WinstonContainer.it.logging('not-found-application', 'iamfilename');
+      const log = WinstonContainer.l('not-found-application', 'iamfilename');
+      log.info({ message: 'test' } as any);
     }).toThrowError();
 
     expect(WinstonContainer.it).toBeTruthy();
@@ -340,7 +341,7 @@ describe('createLogger', () => {
       throw new Error('for test, one-time');
     });
 
-    const log = WinstonContainer.it.logging('app', 'iamfilename');
+    const log = WinstonContainer.l('app', 'iamfilename');
     log.info({});
   });
 });
