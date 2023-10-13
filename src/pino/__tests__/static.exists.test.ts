@@ -221,7 +221,7 @@ describe('bootstrap', () => {
 
     await PinoContainer.bootstrap(true, option);
 
-    const log = PinoContainer.it.logging('iamfilename');
+    const log = PinoContainer.l('iamfilename');
 
     log.$('test');
 
@@ -246,7 +246,7 @@ describe('bootstrap', () => {
 
     PinoContainer.bootstrap(false, option);
 
-    const log = PinoContainer.it.logging('app', 'iamfilename');
+    const log = PinoContainer.l('app', 'iamfilename');
     log.$('test');
     log.fatal({});
     log.error({});
@@ -275,7 +275,8 @@ describe('bootstrap', () => {
     PinoContainer.bootstrap(false, option);
 
     expect(() => {
-      PinoContainer.it.logging('not-found-application', 'iamfilename');
+      const log = PinoContainer.l('not-found-application', 'iamfilename');
+      log.info({ message: 'test' } as any);
     }).toThrowError();
 
     expect(PinoContainer.it).toBeTruthy();
@@ -300,7 +301,7 @@ describe('bootstrap', () => {
       throw new Error('for test, one-time');
     });
 
-    const log = PinoContainer.it.logging('app', 'iamfilename');
+    const log = PinoContainer.l('app', 'iamfilename');
     log.info({});
   });
 });

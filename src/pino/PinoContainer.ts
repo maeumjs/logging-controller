@@ -176,12 +176,19 @@ export default class PinoContainer {
         : { name: rawName, fullname: rawFullname };
     const filename = basenames(fullname, ['.ts', '.tsx', '.mts', '.cts']);
 
+    let debugLogger: debug.IDebugger | undefined;
+
+    const debugLogging = (...args: any[]) => {
+      debugLogger =
+        debugLogger != null
+          ? debugLogger
+          : ll(process.env.DEBUG_CHANNEL, filename, PinoContainer.#it.#option.develop());
+
+      const [formatter, ...rest] = args;
+      debugLogger(formatter, ...rest);
+    };
+
     const doLogging = (level: LevelWithSilent, content: Partial<ILogFormat & { err: Error }>) => {
-      const debugLogger = ll(
-        process.env.DEBUG_CHANNEL,
-        filename,
-        PinoContainer.#it.#option.develop(),
-      );
       const application = PinoContainer.#it.#loggers[name];
 
       if (application == null) {
@@ -207,8 +214,8 @@ export default class PinoContainer {
         });
       } catch (catched) {
         const err = isError(catched, new Error(`unknown error raised from ${__filename}`));
-        debugLogger(err.message); // eslint-disable-line
-        debugLogger(err.stack); // eslint-disable-line
+        debugLogging(err.message); // eslint-disable-line
+        debugLogging(err.stack); // eslint-disable-line
       }
     };
 
@@ -222,9 +229,7 @@ export default class PinoContainer {
       trace: (content: Partial<ILogFormat>) => doLogging('trace', content),
       silent: (content: Partial<ILogFormat>) => doLogging('silent', content),
       $: (...args: any[]) => {
-        const debugLogger = ll(process.env.DEBUG, filename, false);
-        const [first, ...body] = args;
-        debugLogger(first, ...body);
+        debugLogging(...args);
       },
     };
   }
@@ -240,58 +245,5 @@ export default class PinoContainer {
 
   get option() {
     return this.#option;
-  }
-
-  public logging(rawName: string, rawFullname?: string): Readonly<IPinoLogger> {
-    const { name, fullname } =
-      rawFullname == null
-        ? { name: CE_DEFAULT_VALUE.APPLICATION_NAME, fullname: rawName }
-        : { name: rawName, fullname: rawFullname };
-    const filename = basenames(fullname, ['.ts', '.tsx', '.mts', '.cts']);
-    const debugLogger = ll(process.env.DEBUG, filename, this.#option.develop());
-    const application = this.#loggers[name];
-
-    if (application == null) {
-      throw new Error(`Logging application([${name}]) does not exists`);
-    }
-
-    const doLogging = (
-      loggerMethod: pino.LogFn,
-      content: Partial<ILogFormat> & { err?: Error },
-    ) => {
-      try {
-        const status = content.status ?? httpStatusCodes.OK;
-        const id = content.id ?? 'SYS';
-
-        loggerMethod({
-          ...content,
-          status,
-          id,
-          filename,
-          ...getError(content),
-          body: content.body,
-        });
-      } catch (catched) {
-        const err = isError(catched, new Error(`unknown error raised from ${__filename}`));
-
-        console.error(err.message); // eslint-disable-line
-        console.error(err.stack); // eslint-disable-line
-      }
-    };
-
-    return {
-      $kind: 'pino',
-      fatal: (content: Partial<ILogFormat>) => doLogging(application.logger.fatal, content),
-      error: (content: Partial<ILogFormat>) => doLogging(application.logger.error, content),
-      warn: (content: Partial<ILogFormat>) => doLogging(application.logger.warn, content),
-      info: (content: Partial<ILogFormat>) => doLogging(application.logger.info, content),
-      debug: (content: Partial<ILogFormat>) => doLogging(application.logger.debug, content),
-      trace: (content: Partial<ILogFormat>) => doLogging(application.logger.trace, content),
-      silent: (content: Partial<ILogFormat>) => doLogging(application.logger.silent, content),
-      $: (...args: any[]) => {
-        const [first, ...body] = args;
-        debugLogger(first, ...body);
-      },
-    };
   }
 }

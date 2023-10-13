@@ -22,7 +22,7 @@ describe('getRequestLoggerOption', () => {
       getLogId: (route: IRoutePath) => `request-log-${route.method}`,
       isCurl: false,
       isReplyPayloadLogging: true,
-      logger: WinstonContainer.it.logging('request-logger'),
+      logger: WinstonContainer.l('request-logger'),
       excludes: new Map<string, boolean>([['/health', false]]),
       includes: new Map<string, boolean>([
         ['/health', true],

@@ -10,11 +10,11 @@ export default function getBootstrapedLogger(
     | Pick<Partial<IRequestCurlCreatorOption>, 'logger'>,
 ) {
   if (option?.logger == null && WinstonContainer.isBootstrap) {
-    return WinstonContainer.it.logging(name);
+    return WinstonContainer.l(name);
   }
 
   if (option?.logger == null && PinoContainer.isBootstrap) {
-    return PinoContainer.it.logging(name);
+    return PinoContainer.l(name);
   }
 
   if (option?.logger == null) {

@@ -100,7 +100,7 @@ describe('getLogContainerOption', () => {
 
 describe('ll', () => {
   it('pass - debug function', () => {
-    const fn = ll('maeum', 'iamfilename', false);
+    const fn = ll('maeum', 'iamfilename', true);
     expect(fn.namespace).toEqual('maeum:iamfilename');
   });
 
