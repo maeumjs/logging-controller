@@ -1,9 +1,9 @@
-import type IRequestCurlCreatorOption from '#/http/interfaces/IRequestCurlCreatorOption';
-import type IRequestLoggerOption from '#/http/interfaces/IRequestLoggerOption';
-import PinoContainer from '#/pino/PinoContainer';
-import WinstonContainer from '#/winston/WinstonContainer';
+import type { IRequestCurlCreatorOption } from '#/http/interfaces/IRequestCurlCreatorOption';
+import type { IRequestLoggerOption } from '#/http/interfaces/IRequestLoggerOption';
+import { PinoContainer } from '#/pino/PinoContainer';
+import { WinstonContainer } from '#/winston/WinstonContainer';
 
-export default function getBootstrapedLogger(
+export function getBootstrapedLogger(
   name: string,
   option?:
     | Pick<Partial<IRequestLoggerOption>, 'logger'>

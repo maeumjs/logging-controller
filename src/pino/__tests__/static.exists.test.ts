@@ -1,8 +1,8 @@
-import * as getError from '#/common/modules/getError';
-import prepareCreation from '#/common/modules/prepareCreation';
-import prepareCreationSync from '#/common/modules/prepareCreationSync';
-import PinoContainer from '#/pino/PinoContainer';
-import type IPinoContainerOption from '#/pino/interfaces/IPinoContainerOption';
+import * as ge from '#/common/modules/getError';
+import { prepareCreation } from '#/common/modules/prepareCreation';
+import { prepareCreationSync } from '#/common/modules/prepareCreationSync';
+import { PinoContainer } from '#/pino/PinoContainer';
+import type { IPinoContainerOption } from '#/pino/interfaces/IPinoContainerOption';
 import fs from 'node:fs';
 import path from 'node:path';
 import pino from 'pino';
@@ -297,7 +297,7 @@ describe('bootstrap', () => {
 
     PinoContainer.bootstrap(false, option);
 
-    vi.spyOn(getError, 'default').mockImplementation(() => {
+    vi.spyOn(ge, 'getError').mockImplementation(() => {
       throw new Error('for test, one-time');
     });
 

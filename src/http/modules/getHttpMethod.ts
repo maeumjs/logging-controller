@@ -1,6 +1,6 @@
 import { CE_HTTP_METHOD } from '#/common/const-enum/CE_HTTP_METHOD';
 
-export default function getHttpMethod(method?: unknown): string {
+export function getHttpMethod(method?: unknown): string {
   if (method == null || typeof method !== 'string') {
     return 'UNKNOWN';
   }

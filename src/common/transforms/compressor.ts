@@ -1,8 +1,8 @@
-import safeStringify from '#/common/transforms/safeStringify';
-import escape from '#/http/modules/escape';
+import { safeStringify } from '#/common/transforms/safeStringify';
+import { escape } from '#/http/modules/escape';
 import { compress } from 'snappy';
 
-export default async function compressor(data: unknown): Promise<string> {
+export async function compressor(data: unknown): Promise<string> {
   try {
     if (typeof data !== 'string') {
       const stringified = safeStringify(data);

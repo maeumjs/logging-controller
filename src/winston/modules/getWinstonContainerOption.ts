@@ -1,10 +1,10 @@
 import { CE_DEFAULT_VALUE } from '#/common/const-enum/CE_DEFAULT_VALUE';
-import type ILogContainerOption from '#/common/interfaces/ILogContainerOption';
-import getLogContainerOption from '#/common/modules/getLogContainerOption';
-import type IWinstonContainerOption from '#/winston/interfaces/IWinstonContainerOption';
+import type { ILogContainerOption } from '#/common/interfaces/ILogContainerOption';
+import { getLogContainerOption } from '#/common/modules/getLogContainerOption';
+import type { IWinstonContainerOption } from '#/winston/interfaces/IWinstonContainerOption';
 import type { PartialDeep } from 'type-fest';
 
-export default function getWinstonContainerOption(
+export function getWinstonContainerOption(
   nullableOption?: PartialDeep<IWinstonContainerOption>,
 ): IWinstonContainerOption {
   const firstStage = getLogContainerOption(nullableOption);

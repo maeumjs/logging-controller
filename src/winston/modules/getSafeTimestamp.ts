@@ -1,6 +1,6 @@
 import { format, parseISO } from 'date-fns';
 
-export default function getSafeTimestamp(literal?: unknown): string {
+export function getSafeTimestamp(literal?: unknown): string {
   try {
     if (typeof literal !== 'string') {
       throw new Error('invalid timestamp string');

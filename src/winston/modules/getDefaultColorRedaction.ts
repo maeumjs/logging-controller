@@ -1,11 +1,9 @@
-import safeStringify from '#/common/transforms/safeStringify';
-import colors from '#/winston/modules/colors';
-import getSafeTimestamp from '#/winston/modules/getSafeTimestamp';
-import getWithoutMessageInfo from '#/winston/modules/getWithoutMessageInfo';
+import { safeStringify } from '#/common/transforms/safeStringify';
+import { colors } from '#/winston/modules/colors';
+import { getSafeTimestamp } from '#/winston/modules/getSafeTimestamp';
+import { getWithoutMessageInfo } from '#/winston/modules/getWithoutMessageInfo';
 
-export default function getDefaultColorRedaction(transformableInfo: {
-  [key: string | symbol]: unknown;
-}) {
+export function getDefaultColorRedaction(transformableInfo: { [key: string | symbol]: unknown }) {
   const withoutMessage = getWithoutMessageInfo(transformableInfo);
   const { _f: filename, level, timestamp: isoTimestamp, ...other } = withoutMessage;
   const timestamp = getSafeTimestamp(isoTimestamp);

@@ -1,10 +1,9 @@
-import type ILogContainerOption from '#/common/interfaces/ILogContainerOption';
-import type { TFilePathKind } from '#/common/interfaces/ILogContainerOption';
+import type { ILogContainerOption, TFilePathKind } from '#/common/interfaces/ILogContainerOption';
 import type pino from 'pino';
 import type { Level } from 'pino';
 import type { LastArrayElement, Merge } from 'type-fest';
 
-export default interface IPinoContainerOption<
+export interface IPinoContainerOption<
   TransportType = Record<string, unknown>,
   MultiStreamType = Level,
 > extends Omit<ILogContainerOption, 'applications'> {

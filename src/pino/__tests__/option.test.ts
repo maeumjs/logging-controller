@@ -1,4 +1,4 @@
-import getPinoContainerOption from '#/pino/modules/getPinoContainerOption';
+import { getPinoContainerOption } from '#/pino/modules/getPinoContainerOption';
 import { describe, expect, it } from 'vitest';
 
 describe('getPinoContainerOption', () => {

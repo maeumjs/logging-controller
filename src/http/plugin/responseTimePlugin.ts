@@ -6,7 +6,7 @@ import fastifyPlugin from 'fastify-plugin';
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Server-Timing
  */
-const responseTimePlugin = fastifyPlugin(
+export const responseTimePlugin = fastifyPlugin(
   function responseTimeHandle(
     fastify: FastifyInstance,
     options: {
@@ -33,5 +33,3 @@ const responseTimePlugin = fastifyPlugin(
     name: 'maeum-response-time',
   },
 );
-
-export default responseTimePlugin;

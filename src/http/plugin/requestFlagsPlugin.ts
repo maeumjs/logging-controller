@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import type { FastifyInstance } from 'fastify';
 import fastifyPlugin, { type PluginMetadata } from 'fastify-plugin';
 
@@ -21,7 +22,7 @@ declare module 'fastify' {
   }
 }
 
-const requestFlagsPlugin = fastifyPlugin(
+export const requestFlagsPlugin = fastifyPlugin(
   function errorFlag(
     fastify: FastifyInstance,
     _options: PluginMetadata,
@@ -64,5 +65,3 @@ const requestFlagsPlugin = fastifyPlugin(
     name: 'maeum-request-flag',
   },
 );
-
-export default requestFlagsPlugin;

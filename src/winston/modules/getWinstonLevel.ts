@@ -1,8 +1,6 @@
 import type winston from 'winston';
 
-export default function getWinstonLevel(
-  level?: string,
-): keyof winston.config.SyslogConfigSetLevels {
+export function getWinstonLevel(level?: string): keyof winston.config.SyslogConfigSetLevels {
   switch (level) {
     case 'emerg':
     case 'alert':

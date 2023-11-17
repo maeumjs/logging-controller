@@ -1,4 +1,4 @@
-export default interface ILogFormat {
+export interface ILogFormat {
   /**
    * 로그 상태 값: 시스템 로그 또는 HTTP 로그 등을 기록할 때도 로그 상태 값을 로깅한다.
    * 일관성 및 편의성을 위해 HTTP 상태 값을 사용한다.

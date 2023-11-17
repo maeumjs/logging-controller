@@ -1,4 +1,4 @@
-export default function getSafeFormatter(
+export function getSafeFormatter(
   transformableInfo: { [key: string | symbol]: unknown },
   redactor: (transformableInfo: { [key: string | symbol]: unknown }) => string,
 ) {

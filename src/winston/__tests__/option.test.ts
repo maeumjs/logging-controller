@@ -1,4 +1,4 @@
-import getWinstonContainerOption from '#/winston/modules/getWinstonContainerOption';
+import { getWinstonContainerOption } from '#/winston/modules/getWinstonContainerOption';
 import { describe, expect, it } from 'vitest';
 
 describe('getWinstonContainerOption', () => {

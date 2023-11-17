@@ -1,31 +1,30 @@
 import { CE_DEFAULT_VALUE } from '#/common/const-enum/CE_DEFAULT_VALUE';
-import type ILogContainerOption from '#/common/interfaces/ILogContainerOption';
-import type { TFilePathKind } from '#/common/interfaces/ILogContainerOption';
-import type ILogFormat from '#/common/interfaces/ILogFormat';
-import ll from '#/common/ll';
-import getError from '#/common/modules/getError';
-import prepareCreation from '#/common/modules/prepareCreation';
-import prepareCreationSync from '#/common/modules/prepareCreationSync';
-import type IPinoContainerOption from '#/pino/interfaces/IPinoContainerOption';
-import type IPinoLogger from '#/pino/interfaces/IPinoLogger';
-import getPinoContainerOption from '#/pino/modules/getPinoContainerOption';
-import getPinoLevel from '#/pino/modules/getPinoLevel';
+import type { ILogContainerOption, TFilePathKind } from '#/common/interfaces/ILogContainerOption';
+import type { ILogFormat } from '#/common/interfaces/ILogFormat';
+import { ll } from '#/common/ll';
+import { getError } from '#/common/modules/getError';
+import { prepareCreation } from '#/common/modules/prepareCreation';
+import { prepareCreationSync } from '#/common/modules/prepareCreationSync';
+import type { IPinoContainerOption } from '#/pino/interfaces/IPinoContainerOption';
+import type { IPinoLogger } from '#/pino/interfaces/IPinoLogger';
+import { getPinoContainerOption } from '#/pino/modules/getPinoContainerOption';
+import { getPinoLevel } from '#/pino/modules/getPinoLevel';
 import httpStatusCodes from 'http-status-codes';
 import { isError } from 'my-easy-fp';
 import { basenames } from 'my-node-fp';
 import inspector from 'node:inspector';
 import path from 'node:path';
-import { pino, type LevelWithSilent } from 'pino';
+import pino, { type LevelWithSilent, type Logger } from 'pino';
 import type { LastArrayElement } from 'type-fest';
 
 type TPinoLoggerApplication = {
-  logger: pino.Logger;
+  logger: Logger;
   application: LastArrayElement<IPinoContainerOption['applications']>;
 };
 
 type TPinoLoggerContainer = Record<string, TPinoLoggerApplication>;
 
-export default class PinoContainer {
+export class PinoContainer {
   static #it: PinoContainer;
 
   static #isBootstrap: boolean = false;
@@ -150,7 +149,7 @@ export default class PinoContainer {
     return option;
   }
 
-  public static getLogMethod(level: LevelWithSilent, logger: pino.Logger) {
+  public static getLogMethod(level: LevelWithSilent, logger: Logger) {
     switch (level) {
       case 'fatal':
         return logger.fatal;

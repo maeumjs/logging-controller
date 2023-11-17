@@ -1,6 +1,6 @@
 export type TFilePathKind = 'var' | 'local';
 
-export default interface ILogContainerOption {
+export interface ILogContainerOption {
   /**
    * 개발 모드를 설정합니다. 개발 모드인 경우 log 파일 디렉터리가 없을 경우 자동생성하는 등의 개발
    * 편의 기능을 제공합니다

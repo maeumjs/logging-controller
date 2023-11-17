@@ -1,6 +1,6 @@
-import type ILogFormat from '#/common/interfaces/ILogFormat';
+import type { ILogFormat } from '#/common/interfaces/ILogFormat';
 
-export default interface IPinoLogger {
+export interface IPinoLogger {
   $kind: 'pino';
   fatal: (content: Partial<ILogFormat & { err: Error }>) => void;
   error: (content: Partial<ILogFormat & { err: Error }>) => void;

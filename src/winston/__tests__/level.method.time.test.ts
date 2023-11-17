@@ -1,7 +1,7 @@
 import { CE_HTTP_METHOD } from '#/common/const-enum/CE_HTTP_METHOD';
-import getHttpMethod from '#/http/modules/getHttpMethod';
-import getSafeTimestamp from '#/winston/modules/getSafeTimestamp';
-import getWinstonLevel from '#/winston/modules/getWinstonLevel';
+import { getHttpMethod } from '#/http/modules/getHttpMethod';
+import { getSafeTimestamp } from '#/winston/modules/getSafeTimestamp';
+import { getWinstonLevel } from '#/winston/modules/getWinstonLevel';
 import { describe, expect, it, vi } from 'vitest';
 
 describe('getWinstonLevel', () => {

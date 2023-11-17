@@ -1,15 +1,15 @@
-import getBootstrapedLogger from '#/common/modules/getBootstrapedLogger';
-import compressor from '#/common/transforms/compressor';
-import objectifior from '#/common/transforms/objectify';
-import safeStringify from '#/common/transforms/safeStringify';
+import { getBootstrapedLogger } from '#/common/modules/getBootstrapedLogger';
+import { compressor } from '#/common/transforms/compressor';
+import { objectify as objectifor } from '#/common/transforms/objectify';
+import { safeStringify } from '#/common/transforms/safeStringify';
 import { CE_LOGGING_ACTION_CODE } from '#/http/const-enum/CE_LOGGING_ACTION_CODE';
-import type IFastMakerRoutePath from '#/http/interfaces/IFastMakerRoutePath';
-import type IHTTPLogRecordAction from '#/http/interfaces/IHTTPLogRecordAction';
-import type IHTTPLogRecordHandler from '#/http/interfaces/IHTTPLogRecordHandler';
-import type IRequestLoggerOption from '#/http/interfaces/IRequestLoggerOption';
+import type { IFastMakerRoutePath } from '#/http/interfaces/IFastMakerRoutePath';
+import type { IHTTPLogRecordAction } from '#/http/interfaces/IHTTPLogRecordAction';
+import type { IHTTPLogRecordHandler } from '#/http/interfaces/IHTTPLogRecordHandler';
+import type { IRequestLoggerOption } from '#/http/interfaces/IRequestLoggerOption';
 import type { PartialDeep } from 'type-fest';
 
-export default function getRequestLoggerOption(
+export function getRequestLoggerOption(
   option?: PartialDeep<Omit<IRequestLoggerOption, 'logger'>> & {
     logger?: IRequestLoggerOption['logger'];
   },
@@ -41,7 +41,7 @@ export default function getRequestLoggerOption(
   const level = option?.level ?? 'info';
   const stringify = option?.stringify ?? ((data: unknown) => safeStringify(data));
   const compress = option?.compress ?? ((data: unknown) => compressor(data));
-  const objectify = option?.objectify ?? ((data: unknown) => objectifior(data));
+  const objectify = option?.objectify ?? ((data: unknown) => objectifor(data));
 
   return {
     ...option,

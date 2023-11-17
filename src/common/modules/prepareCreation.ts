@@ -1,11 +1,11 @@
-import type ILogContainerOption from '#/common/interfaces/ILogContainerOption';
-import getExistPath from '#/common/modules/getExistPath';
+import type { ILogContainerOption } from '#/common/interfaces/ILogContainerOption';
+import { getExistPath } from '#/common/modules/getExistPath';
 import { exists } from 'my-node-fp';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { LastArrayElement } from 'type-fest';
 
-export default async function prepareCreation(
+export async function prepareCreation(
   option: ILogContainerOption,
   application: LastArrayElement<ILogContainerOption['applications']>,
 ) {
