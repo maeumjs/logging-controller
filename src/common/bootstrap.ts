@@ -1,10 +1,10 @@
-import type IPinoLoggingControllerOption from '#/common/interfaces/IPinoLoggingControllerOption';
-import type IWinstonLoggingControllerOption from '#/common/interfaces/IWinstonLoggingControllerOption';
-import interpretorErrorHandler from '#/common/interpretorErrorHandler';
-import RequestCurlCreator from '#/http/request/RequestCurlCreator';
-import RequestLogger from '#/http/request/RequestLogger';
-import PinoContainer from '#/pino/PinoContainer';
-import WinstonContainer from '#/winston/WinstonContainer';
+import type { IPinoLoggingControllerOption } from '#/common/interfaces/IPinoLoggingControllerOption';
+import type { IWinstonLoggingControllerOption } from '#/common/interfaces/IWinstonLoggingControllerOption';
+import { interpretorErrorHandler } from '#/common/interpretorErrorHandler';
+import { RequestCurlCreator } from '#/http/request/RequestCurlCreator';
+import { RequestLogger } from '#/http/request/RequestLogger';
+import { PinoContainer } from '#/pino/PinoContainer';
+import { WinstonContainer } from '#/winston/WinstonContainer';
 
 export function bootstrapWinston<T extends boolean>(
   async: T,

@@ -1,4 +1,4 @@
-import getPinoLevel from '#/pino/modules/getPinoLevel';
+import { getPinoLevel } from '#/pino/modules/getPinoLevel';
 import { describe, expect, it } from 'vitest';
 
 describe('getPinoLevel', () => {

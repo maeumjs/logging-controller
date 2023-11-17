@@ -1,9 +1,9 @@
-import getDefaultColorRedaction from '#/winston/modules/getDefaultColorRedaction';
-import getDefaultRedaction from '#/winston/modules/getDefaultRedaction';
-import getSafeFormatter from '#/winston/modules/getSafeFormatter';
+import { getDefaultColorRedaction } from '#/winston/modules/getDefaultColorRedaction';
+import { getDefaultRedaction } from '#/winston/modules/getDefaultRedaction';
+import { getSafeFormatter } from '#/winston/modules/getSafeFormatter';
 import winston from 'winston';
 
-export default function getFormatter(useColor: boolean = false) {
+export function getFormatter(useColor: boolean = false) {
   if (useColor) {
     return winston.format.combine(
       winston.format.timestamp(),

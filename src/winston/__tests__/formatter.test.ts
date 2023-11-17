@@ -1,5 +1,5 @@
-import getFormatter from '#/winston/modules/getFormatter';
-import getWithoutMessageInfo from '#/winston/modules/getWithoutMessageInfo';
+import { getFormatter } from '#/winston/modules/getFormatter';
+import { getWithoutMessageInfo } from '#/winston/modules/getWithoutMessageInfo';
 import { describe, expect, it } from 'vitest';
 
 describe('getFormatter', () => {

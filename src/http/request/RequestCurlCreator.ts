@@ -1,10 +1,10 @@
-import type IFastMakerRoutePath from '#/http/interfaces/IFastMakerRoutePath';
-import type IRequestCurlCreatorOption from '#/http/interfaces/IRequestCurlCreatorOption';
-import getRequestCurlCreatorOption from '#/http/modules/getRequestCurlCreatorOption';
+import type { IFastMakerRoutePath } from '#/http/interfaces/IFastMakerRoutePath';
+import type { IRequestCurlCreatorOption } from '#/http/interfaces/IRequestCurlCreatorOption';
+import { getRequestCurlCreatorOption } from '#/http/modules/getRequestCurlCreatorOption';
 import type { FastifyRequest } from 'fastify';
 import { createFromFastify3, encodeQuerystring } from 'jin-curlize';
 
-export default class RequestCurlCreator {
+export class RequestCurlCreator {
   static #it: RequestCurlCreator;
 
   static #isBootstrap: boolean = false;

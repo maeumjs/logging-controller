@@ -1,6 +1,6 @@
 import type { CE_LOGGING_ACTION_CODE } from '#/http/const-enum/CE_LOGGING_ACTION_CODE';
 
-export default interface IHTTPLogRecordAction {
+export interface IHTTPLogRecordAction {
   request: {
     querystring: CE_LOGGING_ACTION_CODE;
     params: CE_LOGGING_ACTION_CODE;

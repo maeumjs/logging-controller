@@ -1,4 +1,4 @@
-export default interface IRoutePath {
+export interface IRoutePath {
   routePath: string;
   method: string;
 }

@@ -1,6 +1,6 @@
-import type ILogFormat from '#/common/interfaces/ILogFormat';
+import type { ILogFormat } from '#/common/interfaces/ILogFormat';
 
-export default interface IWintonLogger {
+export interface IWintonLogger {
   $kind: 'winston';
   emerg: (content: Partial<ILogFormat & { err: Error }>) => void;
   alert: (content: Partial<ILogFormat & { err: Error }>) => void;

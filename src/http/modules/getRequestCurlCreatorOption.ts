@@ -1,7 +1,7 @@
-import getBootstrapedLogger from '#/common/modules/getBootstrapedLogger';
-import type IRequestCurlCreatorOption from '#/http/interfaces/IRequestCurlCreatorOption';
+import { getBootstrapedLogger } from '#/common/modules/getBootstrapedLogger';
+import type { IRequestCurlCreatorOption } from '#/http/interfaces/IRequestCurlCreatorOption';
 
-export default function getRequestCurlCreatorOption(
+export function getRequestCurlCreatorOption(
   option?: Partial<IRequestCurlCreatorOption>,
 ): IRequestCurlCreatorOption {
   const logger = getBootstrapedLogger('request-curl-logger', option);

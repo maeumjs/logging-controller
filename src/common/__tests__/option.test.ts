@@ -1,4 +1,4 @@
-import getLogContainerOption from '#/common/modules/getLogContainerOption';
+import { getLogContainerOption } from '#/common/modules/getLogContainerOption';
 import { describe, expect, it } from 'vitest';
 
 describe('getLogContainerOption', () => {

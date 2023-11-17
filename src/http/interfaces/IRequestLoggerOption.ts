@@ -1,10 +1,10 @@
-import type IFastMakerRoutePath from '#/http/interfaces/IFastMakerRoutePath';
-import type IHTTPLogRecordAction from '#/http/interfaces/IHTTPLogRecordAction';
-import type IHTTPLogRecordHandler from '#/http/interfaces/IHTTPLogRecordHandler';
-import type IPinoLogger from '#/pino/interfaces/IPinoLogger';
-import type IWintonLogger from '#/winston/interfaces/IWintonLogger';
+import type { IFastMakerRoutePath } from '#/http/interfaces/IFastMakerRoutePath';
+import type { IHTTPLogRecordAction } from '#/http/interfaces/IHTTPLogRecordAction';
+import type { IHTTPLogRecordHandler } from '#/http/interfaces/IHTTPLogRecordHandler';
+import type { IPinoLogger } from '#/pino/interfaces/IPinoLogger';
+import type { IWintonLogger } from '#/winston/interfaces/IWintonLogger';
 
-export default interface IRequestLoggerOption {
+export interface IRequestLoggerOption {
   /** log-id create function */
   getLogId: (route: Omit<IFastMakerRoutePath, 'filePath'>) => string;
 

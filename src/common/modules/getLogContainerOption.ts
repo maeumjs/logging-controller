@@ -1,7 +1,7 @@
-import type ILogContainerOption from '#/common/interfaces/ILogContainerOption';
+import type { ILogContainerOption } from '#/common/interfaces/ILogContainerOption';
 import type { PartialDeep } from 'type-fest';
 
-export default function getLogContainerOption(
+export function getLogContainerOption(
   option?: PartialDeep<ILogContainerOption>,
 ): ILogContainerOption {
   const applications = option?.applications ?? [];

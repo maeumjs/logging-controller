@@ -1,6 +1,6 @@
 import type { LevelWithSilent } from 'pino';
 
-export default function getPinoLevel(level?: string): LevelWithSilent {
+export function getPinoLevel(level?: string): LevelWithSilent {
   switch (level) {
     case 'fatal':
     case 'error':

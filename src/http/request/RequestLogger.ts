@@ -1,13 +1,13 @@
-import type ILogFormat from '#/common/interfaces/ILogFormat';
-import getError from '#/common/modules/getError';
+import type { ILogFormat } from '#/common/interfaces/ILogFormat';
+import { getError } from '#/common/modules/getError';
 import { CE_LOGGING_ACTION_CODE } from '#/http/const-enum/CE_LOGGING_ACTION_CODE';
 import { CE_REQUEST_LOGGING_RESULT_CODE } from '#/http/const-enum/CE_REQUEST_LOGGING_RESULT_CODE';
-import type IRequestLoggerOption from '#/http/interfaces/IRequestLoggerOption';
-import getHttpMethod from '#/http/modules/getHttpMethod';
-import getRequestLoggerOption from '#/http/modules/getRequestLoggerOption';
-import getRoutePathKey from '#/http/modules/getRoutePathKey';
-import requestFlagsPlugin from '#/http/plugin/requestFlagsPlugin';
-import RequestCurlCreator from '#/http/request/RequestCurlCreator';
+import type { IRequestLoggerOption } from '#/http/interfaces/IRequestLoggerOption';
+import { getHttpMethod } from '#/http/modules/getHttpMethod';
+import { getRequestLoggerOption } from '#/http/modules/getRequestLoggerOption';
+import { getRoutePathKey } from '#/http/modules/getRoutePathKey';
+import { requestFlagsPlugin } from '#/http/plugin/requestFlagsPlugin';
+import { RequestCurlCreator } from '#/http/request/RequestCurlCreator';
 import { getValidationErrorSummary } from '@maeum/tools';
 import type { ErrorObject } from 'ajv';
 import formatISO from 'date-fns/formatISO';
@@ -23,7 +23,7 @@ import fastifyPlugin from 'fastify-plugin';
 import { isError } from 'my-easy-fp';
 import { isPromise } from 'node:util/types';
 
-export default class RequestLogger {
+export class RequestLogger {
   static #it: RequestLogger;
 
   static #isBootstrap: boolean = false;

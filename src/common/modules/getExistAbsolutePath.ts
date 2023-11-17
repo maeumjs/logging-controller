@@ -1,7 +1,7 @@
 import type { TFilePathKind } from '#/common/interfaces/ILogContainerOption';
 import path from 'node:path';
 
-export default function getExistAbsolutePath(
+export function getExistAbsolutePath(
   develop: boolean,
   exists: { local: boolean; var: boolean },
   dirs: { var: string; local: string },

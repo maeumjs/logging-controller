@@ -1,16 +1,15 @@
 import { CE_DEFAULT_VALUE } from '#/common/const-enum/CE_DEFAULT_VALUE';
-import type ILogContainerOption from '#/common/interfaces/ILogContainerOption';
-import type { TFilePathKind } from '#/common/interfaces/ILogContainerOption';
-import type ILogFormat from '#/common/interfaces/ILogFormat';
-import ll from '#/common/ll';
-import getError from '#/common/modules/getError';
-import prepareCreation from '#/common/modules/prepareCreation';
-import prepareCreationSync from '#/common/modules/prepareCreationSync';
-import type IWinstonContainerOption from '#/winston/interfaces/IWinstonContainerOption';
-import type IWintonLogger from '#/winston/interfaces/IWintonLogger';
-import getFormatter from '#/winston/modules/getFormatter';
-import getWinstonContainerOption from '#/winston/modules/getWinstonContainerOption';
-import getWinstonLevel from '#/winston/modules/getWinstonLevel';
+import type { ILogContainerOption, TFilePathKind } from '#/common/interfaces/ILogContainerOption';
+import type { ILogFormat } from '#/common/interfaces/ILogFormat';
+import { ll } from '#/common/ll';
+import { getError } from '#/common/modules/getError';
+import { prepareCreation } from '#/common/modules/prepareCreation';
+import { prepareCreationSync } from '#/common/modules/prepareCreationSync';
+import type { IWinstonContainerOption } from '#/winston/interfaces/IWinstonContainerOption';
+import type { IWintonLogger } from '#/winston/interfaces/IWintonLogger';
+import { getFormatter } from '#/winston/modules/getFormatter';
+import { getWinstonContainerOption } from '#/winston/modules/getWinstonContainerOption';
+import { getWinstonLevel } from '#/winston/modules/getWinstonLevel';
 import httpStatusCodes from 'http-status-codes';
 import { isError } from 'my-easy-fp';
 import { basenames } from 'my-node-fp';
@@ -26,7 +25,7 @@ type TWinstionLoggerApplication = {
 
 type TWinstonLoggerContainer = Record<string, TWinstionLoggerApplication>;
 
-export default class WinstonContainer {
+export class WinstonContainer {
   static #it: WinstonContainer;
 
   static #isBootstrap: boolean = false;

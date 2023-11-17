@@ -1,10 +1,10 @@
 import { CE_DEFAULT_VALUE } from '#/common/const-enum/CE_DEFAULT_VALUE';
-import type ILogContainerOption from '#/common/interfaces/ILogContainerOption';
-import getLogContainerOption from '#/common/modules/getLogContainerOption';
-import type IPinoContainerOption from '#/pino/interfaces/IPinoContainerOption';
+import type { ILogContainerOption } from '#/common/interfaces/ILogContainerOption';
+import { getLogContainerOption } from '#/common/modules/getLogContainerOption';
+import type { IPinoContainerOption } from '#/pino/interfaces/IPinoContainerOption';
 import type { PartialDeep } from 'type-fest';
 
-export default function getPinoContainerOption(
+export function getPinoContainerOption(
   nullableOption?: PartialDeep<IPinoContainerOption>,
 ): IPinoContainerOption {
   const firstStage = getLogContainerOption(nullableOption);

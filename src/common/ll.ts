@@ -1,12 +1,12 @@
-import getDebugChannel from '#/common/modules/getDebugChannel';
-import noop from '#/common/modules/noop';
+import { getDebugChannel } from '#/common/modules/getDebugChannel';
+import { noop } from '#/common/modules/noop';
 import debug from 'debug';
 import { basenames } from 'my-node-fp';
 
 /**
  * @param channel name of debugging channel
  */
-export default function ll(env: unknown, filename: string, develop?: boolean): debug.IDebugger {
+export function ll(env: unknown, filename: string, develop?: boolean): debug.IDebugger {
   const namespace = getDebugChannel(env);
 
   if (!develop) {

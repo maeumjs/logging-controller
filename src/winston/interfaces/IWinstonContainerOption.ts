@@ -1,9 +1,8 @@
-import type ILogContainerOption from '#/common/interfaces/ILogContainerOption';
-import type { TFilePathKind } from '#/common/interfaces/ILogContainerOption';
+import type { ILogContainerOption, TFilePathKind } from '#/common/interfaces/ILogContainerOption';
 import type { LastArrayElement, Merge } from 'type-fest';
 import type { LoggerOptions } from 'winston';
 
-export default interface IWinstonContainerOption extends Omit<ILogContainerOption, 'applications'> {
+export interface IWinstonContainerOption extends Omit<ILogContainerOption, 'applications'> {
   /**
    * If you use multiple log transports, you can add up transports other than the default `app` transport.
    * For example, you can use the `app` transport for application logs and add a `biz` transport for business logs.

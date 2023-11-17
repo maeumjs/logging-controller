@@ -1,8 +1,8 @@
 import type { TFilePathKind } from '#/common/interfaces/ILogContainerOption';
-import getExistAbsolutePath from '#/common/modules/getExistAbsolutePath';
+import { getExistAbsolutePath } from '#/common/modules/getExistAbsolutePath';
 import { exists, existsSync } from 'my-node-fp';
 
-function getExistPath<T extends boolean>(
+export function getExistPath<T extends boolean>(
   async: T,
   develop: boolean,
   dirs: {
@@ -13,7 +13,7 @@ function getExistPath<T extends boolean>(
 ): T extends true
   ? Promise<{ path: string; filename: string; on: TFilePathKind }>
   : { path: string; filename: string; on: TFilePathKind };
-function getExistPath<T extends boolean>(
+export function getExistPath<T extends boolean>(
   async: T,
   develop: boolean,
   dirs: {
@@ -46,5 +46,3 @@ function getExistPath<T extends boolean>(
     filenames,
   );
 }
-
-export default getExistPath;

@@ -1,5 +1,5 @@
-import compressor from '#/common/transforms/compressor';
-import * as safeStringify from '#/common/transforms/safeStringify';
+import { compressor } from '#/common/transforms/compressor';
+import * as ss from '#/common/transforms/safeStringify';
 import { describe, expect, it, vi } from 'vitest';
 
 describe('compressor', () => {
@@ -14,7 +14,7 @@ describe('compressor', () => {
   });
 
   it('pass - string', async () => {
-    const spyH = vi.spyOn(safeStringify, 'default').mockImplementationOnce(() => {
+    const spyH = vi.spyOn(ss, 'safeStringify').mockImplementationOnce(() => {
       throw new Error('error');
     });
     const compressed = await compressor({ name: 'hellop' });

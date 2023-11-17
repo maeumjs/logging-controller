@@ -1,8 +1,8 @@
-import * as getError from '#/common/modules/getError';
-import prepareCreation from '#/common/modules/prepareCreation';
-import prepareCreationSync from '#/common/modules/prepareCreationSync';
-import WinstonContainer from '#/winston/WinstonContainer';
-import type IWinstonContainerOption from '#/winston/interfaces/IWinstonContainerOption';
+import * as ge from '#/common/modules/getError';
+import { prepareCreation } from '#/common/modules/prepareCreation';
+import { prepareCreationSync } from '#/common/modules/prepareCreationSync';
+import { WinstonContainer } from '#/winston/WinstonContainer';
+import type { IWinstonContainerOption } from '#/winston/interfaces/IWinstonContainerOption';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { LastArrayElement } from 'type-fest';
@@ -229,17 +229,17 @@ describe('createLogger', () => {
 
 describe('getError', () => {
   it('pass', () => {
-    const extracted = getError.default({ err: new Error('message') });
+    const extracted = ge.getError({ err: new Error('message') });
     expect(extracted.errMsg).toEqual('message');
   });
 
   it('undefined', () => {
-    const extracted = getError.default({});
+    const extracted = ge.getError({});
     expect(extracted.errMsg).toBeUndefined();
   });
 
   it('object', () => {
-    const extracted = getError.default({ errMsg: 'message', errStk: 'stack' });
+    const extracted = ge.getError({ errMsg: 'message', errStk: 'stack' });
     expect(extracted).toMatchObject({ errMsg: 'message', errStk: 'stack' });
   });
 });
@@ -337,7 +337,7 @@ describe('createLogger', () => {
 
     WinstonContainer.bootstrap(false, option);
 
-    vi.spyOn(getError, 'default').mockImplementation(() => {
+    vi.spyOn(ge, 'getError').mockImplementation(() => {
       throw new Error('for test, one-time');
     });
 

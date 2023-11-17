@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
-export default interface IHTTPLogRecordHandler {
+export interface IHTTPLogRecordHandler {
   request: {
     querystring: (querystring: FastifyRequest['query']) => string;
     params: (params: FastifyRequest['params']) => string;

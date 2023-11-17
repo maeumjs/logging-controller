@@ -1,5 +1,5 @@
-import type IRoutePath from '#/http/interfaces/IRoutePath';
+import type { IRoutePath } from '#/http/interfaces/IRoutePath';
 
-export default interface IFastMakerRoutePath extends IRoutePath {
+export interface IFastMakerRoutePath extends IRoutePath {
   filePath: string;
 }
