@@ -1,13 +1,20 @@
 export const CE_HTTP_METHOD = {
+  DELETE: 'DELETE',
   GET: 'GET',
   HEAD: 'HEAD',
+  PATCH: 'PATCH',
   POST: 'POST',
   PUT: 'PUT',
-  DELETE: 'DELETE',
-  CONNECT: 'CONNECT',
   OPTIONS: 'OPTIONS',
+  SEARCH: 'SEARCH',
   TRACE: 'TRACE',
-  PATCH: 'PATCH',
+  PROPFIND: 'PROPFIND',
+  PROPPATCH: 'PROPPATCH',
+  MKCOL: 'MKCOL',
+  COPY: 'COPY',
+  MOVE: 'MOVE',
+  LOCK: 'LOCK',
+  UNLOCK: 'UNLOCK',
 } as const;
 
 export type CE_HTTP_METHOD = (typeof CE_HTTP_METHOD)[keyof typeof CE_HTTP_METHOD];

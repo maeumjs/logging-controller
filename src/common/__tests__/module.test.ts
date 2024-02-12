@@ -1,79 +1,10 @@
 import { ll } from '#/common/ll';
 import { getDebugChannel } from '#/common/modules/getDebugChannel';
 import { getError } from '#/common/modules/getError';
-import { getExistAbsolutePath } from '#/common/modules/getExistAbsolutePath';
-import { getExistPath } from '#/common/modules/getExistPath';
 import { noop } from '#/common/modules/noop';
 import { objectify } from '#/common/transforms/objectify';
 import { safeStringify } from '#/common/transforms/safeStringify';
-import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
-
-describe('getExistAbsolutePath', () => {
-  it('pass', async () => {
-    const r01 = getExistAbsolutePath(
-      true,
-      { local: true, var: false },
-      { local: '.', var: './src' },
-      { local: 'local.log', var: 'var.log' },
-    );
-    const r02 = getExistAbsolutePath(
-      true,
-      { local: false, var: false },
-      { local: '.', var: './src' },
-      { local: 'local.log', var: 'var.log' },
-    );
-    const r03 = getExistAbsolutePath(
-      false,
-      { local: true, var: false },
-      { local: '.', var: './src' },
-      { local: 'local.log', var: 'var.log' },
-    );
-    const r04 = getExistAbsolutePath(
-      false,
-      { local: true, var: true },
-      { local: '.', var: './src' },
-      { local: 'local.log', var: 'var.log' },
-    );
-    const r05 = getExistAbsolutePath(
-      false,
-      { local: false, var: false },
-      { local: '.', var: './src' },
-      { local: 'local.log', var: 'var.log' },
-    );
-    expect(r01).toEqual({ path: path.resolve(process.cwd()), filename: 'local.log', on: 'local' });
-    expect(r02).toEqual({ path: '.', filename: 'local.log', on: 'local' });
-    expect(r03).toEqual({ path: path.resolve(process.cwd()), filename: 'local.log', on: 'local' });
-    expect(r04).toEqual({
-      path: path.resolve(path.join(process.cwd(), 'src')),
-      filename: 'var.log',
-      on: 'var',
-    });
-    expect(r05).toEqual({ path: '.', filename: 'local.log', on: 'local' });
-  });
-});
-
-describe('getExistPath', () => {
-  it('pass - async', async () => {
-    const lp = await getExistPath(
-      true,
-      true,
-      { local: '.', var: './src' },
-      { local: 'local.log', var: 'var.log' },
-    );
-    expect(lp).toEqual({ path: path.resolve(process.cwd()), filename: 'local.log', on: 'local' });
-  });
-
-  it('pass - sync', async () => {
-    const lp = getExistPath(
-      false,
-      true,
-      { local: '.', var: './src' },
-      { local: 'local.log', var: 'var.log' },
-    );
-    expect(lp).toEqual({ path: path.resolve(process.cwd()), filename: 'local.log', on: 'local' });
-  });
-});
 
 describe('getLogContainerOption', () => {
   it("pass - don't string type", () => {

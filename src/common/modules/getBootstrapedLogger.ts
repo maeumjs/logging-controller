@@ -1,6 +1,5 @@
 import type { IRequestCurlCreatorOption } from '#/http/interfaces/IRequestCurlCreatorOption';
 import type { IRequestLoggerOption } from '#/http/interfaces/IRequestLoggerOption';
-import { PinoContainer } from '#/pino/PinoContainer';
 import { WinstonContainer } from '#/winston/WinstonContainer';
 
 export function getBootstrapedLogger(
@@ -11,10 +10,6 @@ export function getBootstrapedLogger(
 ) {
   if (option?.logger == null && WinstonContainer.isBootstrap) {
     return WinstonContainer.l(name);
-  }
-
-  if (option?.logger == null && PinoContainer.isBootstrap) {
-    return PinoContainer.l(name);
   }
 
   if (option?.logger == null) {

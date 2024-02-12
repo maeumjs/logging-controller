@@ -9,7 +9,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 describe('getRequestLoggerOption', () => {
   beforeAll(() => {
-    WinstonContainer.bootstrap(false, {});
+    WinstonContainer.bootstrap(false, () => false, undefined, {});
   });
 
   it('pass - nullable', () => {

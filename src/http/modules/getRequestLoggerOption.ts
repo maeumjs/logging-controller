@@ -17,7 +17,7 @@ export function getRequestLoggerOption(
   const getLogId =
     option?.getLogId != null
       ? option?.getLogId
-      : (route: Omit<IFastMakerRoutePath, 'filePath'>) => `htt-request-${route.method}`;
+      : (route: Omit<IFastMakerRoutePath, 'filePath'>) => `http-request-${route.method}`;
 
   const logger = getBootstrapedLogger('request-logger', option);
   const isCurl = option?.isCurl ?? true;

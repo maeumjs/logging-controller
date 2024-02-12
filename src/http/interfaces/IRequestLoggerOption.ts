@@ -1,7 +1,6 @@
 import type { IFastMakerRoutePath } from '#/http/interfaces/IFastMakerRoutePath';
 import type { IHTTPLogRecordAction } from '#/http/interfaces/IHTTPLogRecordAction';
 import type { IHTTPLogRecordHandler } from '#/http/interfaces/IHTTPLogRecordHandler';
-import type { IPinoLogger } from '#/pino/interfaces/IPinoLogger';
 import type { IWintonLogger } from '#/winston/interfaces/IWintonLogger';
 
 export interface IRequestLoggerOption {
@@ -29,7 +28,7 @@ export interface IRequestLoggerOption {
   /**
    * logger, winston or pino
    */
-  logger: Readonly<IWintonLogger> | Readonly<IPinoLogger>;
+  logger: Readonly<IWintonLogger>;
 
   /**
    * URL 별로 어떤 로그를 남길지 설정합니다. 예를들면 FastifyRequest.querystring을

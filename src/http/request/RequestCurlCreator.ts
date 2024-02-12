@@ -1,6 +1,7 @@
 import type { IFastMakerRoutePath } from '#/http/interfaces/IFastMakerRoutePath';
 import type { IRequestCurlCreatorOption } from '#/http/interfaces/IRequestCurlCreatorOption';
 import { getRequestCurlCreatorOption } from '#/http/modules/getRequestCurlCreatorOption';
+import { safeStringify } from '@maeum/tools';
 import type { FastifyRequest } from 'fastify';
 import { createFromFastify3, encodeQuerystring } from 'jin-curlize';
 
@@ -52,7 +53,7 @@ export class RequestCurlCreator {
       }
 
       // recommand prettify option enable only local run-mode because newline character possible to broken log
-      const command = createFromFastify3(req, this.#option.curl);
+      const command = safeStringify(createFromFastify3(req, this.#option.curl)); // escape for json object
 
       return command === '' ? undefined : command;
     } catch (catched) {

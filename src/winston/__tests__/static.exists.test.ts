@@ -1,13 +1,9 @@
 import * as ge from '#/common/modules/getError';
-import { prepareCreation } from '#/common/modules/prepareCreation';
-import { prepareCreationSync } from '#/common/modules/prepareCreationSync';
 import { WinstonContainer } from '#/winston/WinstonContainer';
-import type { IWinstonContainerOption } from '#/winston/interfaces/IWinstonContainerOption';
+import { CE_WINSTON_DEFAULT_VALUE } from '#/winston/const-enum/CE_WINSTON_DEFAULT_VALUE';
+import type { TWinstonContainerBootstrapOptions } from '#/winston/interfaces/IWinstonContainerOption';
 import fs from 'node:fs';
-import path from 'node:path';
-import type { LastArrayElement } from 'type-fest';
 import { describe, expect, it, vi } from 'vitest';
-import winston from 'winston';
 
 vi.spyOn(fs, 'mkdirSync').mockImplementation(() => 'created mocking');
 vi.spyOn(fs.promises, 'mkdir').mockImplementation(() => Promise.resolve('created mocking'));
@@ -20,210 +16,47 @@ vi.mock('my-node-fp', async () => {
   };
 });
 
-describe('prepareCreationSync', () => {
-  it('directory exists', () => {
-    const option: IWinstonContainerOption = {
-      develop: () => false,
-      logLevel: 'info',
-      applications: [
-        {
-          name: 'app',
-          path: { on: 'var', var: './src', local: '.' },
-          filename: { on: 'var', var: 'node.log', local: 'node.log' },
-        },
-      ],
-    };
+describe('getSyncLoggers', () => {
+  it('sync function', async () => {
+    const logApp = WinstonContainer.getSyncLoggers(
+      'api',
+      (defaultOptions) => defaultOptions ?? {},
+      { levels: CE_WINSTON_DEFAULT_VALUE.LEVELS },
+    );
 
-    const application: LastArrayElement<IWinstonContainerOption['applications']> = {
-      name: 'app',
-      path: { on: 'var', var: './src', local: '.' },
-      filename: { on: 'var', var: 'node.log', local: 'node.log' },
-    };
+    expect(logApp?.name).toEqual('api');
+  });
 
-    const r01 = prepareCreationSync(option, application);
+  it('async function', async () => {
+    const logApp = WinstonContainer.getSyncLoggers(
+      'api',
+      async (defaultOptions) => defaultOptions ?? {},
+      { levels: CE_WINSTON_DEFAULT_VALUE.LEVELS },
+    );
 
-    expect(r01).toMatchObject({
-      path: path.resolve(path.join(process.cwd(), 'src')),
-      filename: 'node.log',
-      on: 'var',
-    });
-
-    const r02 = prepareCreationSync({ ...option, develop: () => true }, application);
-
-    expect(r02).toMatchObject({
-      path: path.resolve(process.cwd()),
-      filename: 'node.log',
-      on: 'local',
-    });
+    expect(logApp).toBeUndefined();
   });
 });
 
-describe('prepareCreation', () => {
-  it('directory exists', async () => {
-    const option: IWinstonContainerOption = {
-      develop: () => false,
-      logLevel: 'info',
-      applications: [
-        {
-          name: 'app',
-          path: { on: 'var', var: './src', local: '.' },
-          filename: { on: 'var', var: 'node.log', local: 'node.log' },
-        },
-      ],
-    };
-
-    const application: LastArrayElement<IWinstonContainerOption['applications']> = {
-      name: 'app',
-      path: { on: 'var', var: './src', local: '.' },
-      filename: { on: 'var', var: 'node.log', local: 'node.log' },
-    };
-
-    const r01 = await prepareCreation(option, application);
-
-    expect(r01).toMatchObject({
-      path: path.resolve(path.join(process.cwd(), 'src')),
-      filename: 'node.log',
-      on: 'var',
-    });
-
-    const r02 = await prepareCreation({ ...option, develop: () => true }, application);
-
-    expect(r02).toMatchObject({
-      path: path.resolve(process.cwd()),
-      filename: 'node.log',
-      on: 'local',
-    });
-  });
-});
-
-describe('getLogger', () => {
-  it('default-option', () => {
-    const option: IWinstonContainerOption = {
-      develop: () => false,
-      logLevel: 'info',
-      applications: [
-        {
-          name: 'app',
-          path: { on: 'var', var: './logs', local: '.' },
-          filename: { on: 'var', var: 'nodejs.log', local: 'nodejs.log' },
-        },
-      ],
-    };
-    const application: LastArrayElement<IWinstonContainerOption['applications']> = {
-      name: 'app',
-      path: { on: 'var', var: './logs', local: '.' },
-      filename: { on: 'var', var: 'nodejs.log', local: 'nodejs.log' },
-    };
-
-    const logger = WinstonContainer.getLogger(
-      { level: 'info', levels: winston.config.syslog.levels },
-      option,
-      application,
-      { path: './logs', filename: 'nodejs.log', on: 'var' },
+describe('getAsyncLoggers', () => {
+  it('async function', async () => {
+    const logApp = await WinstonContainer.getAsyncLoggers(
+      'api',
+      async (defaultOptions) => defaultOptions ?? {},
+      { levels: CE_WINSTON_DEFAULT_VALUE.LEVELS },
     );
 
-    expect(logger).toBeTruthy();
+    expect(logApp.name).toEqual('api');
   });
 
-  it('default-option', () => {
-    const option: IWinstonContainerOption = {
-      develop: () => false,
-      logLevel: 'info',
-      applications: [
-        {
-          name: 'app',
-          path: { on: 'var', var: './logs', local: '.' },
-          filename: { on: 'var', var: 'nodejs.log', local: 'nodejs.log' },
-        },
-      ],
-    };
-    const application: LastArrayElement<IWinstonContainerOption['applications']> = {
-      name: 'app',
-      path: { on: 'var', var: './logs', local: '.' },
-      filename: { on: 'var', var: 'nodejs.log', local: 'nodejs.log' },
-    };
-
-    const logger = WinstonContainer.getLogger(
-      { level: 'info', levels: winston.config.syslog.levels },
-      option,
-      {
-        ...application,
-        getOption: () => {
-          return {
-            level: 'info',
-            levels: winston.config.syslog.levels,
-            defaultMeta: { logger: application.name, pid: process.pid },
-            transports: [
-              new winston.transports.File({
-                level: 'info' as string,
-                filename: './logs/nodejs.log',
-              }),
-            ],
-          };
-        },
-      },
-      { path: './logs', filename: 'nodejs.log', on: 'var' },
+  it('sync function', async () => {
+    const logApp = await WinstonContainer.getAsyncLoggers(
+      'api',
+      (defaultOptions) => defaultOptions ?? {},
+      { levels: CE_WINSTON_DEFAULT_VALUE.LEVELS },
     );
 
-    expect(logger).toBeTruthy();
-  });
-});
-
-describe('createLogger', () => {
-  it('async', async () => {
-    const option: IWinstonContainerOption = {
-      develop: () => false,
-      logLevel: 'info',
-      applications: [
-        {
-          name: 'app',
-          path: { on: 'var', var: './logs', local: '.' },
-          filename: { on: 'var', var: 'nodejs.log', local: 'nodejs.log' },
-        },
-      ],
-    };
-    const application: LastArrayElement<IWinstonContainerOption['applications']> = {
-      name: 'app',
-      path: { on: 'var', var: './logs', local: '.' },
-      filename: { on: 'var', var: 'nodejs.log', local: 'nodejs.log' },
-    };
-
-    const loggers = await WinstonContainer.createLogger(
-      true,
-      { level: 'info', levels: winston.config.syslog.levels },
-      option,
-      application,
-    );
-
-    expect(loggers).toBeTruthy();
-  });
-
-  it('sync', () => {
-    const option: IWinstonContainerOption = {
-      develop: () => false,
-      logLevel: 'info',
-      applications: [
-        {
-          name: 'app',
-          path: { on: 'var', var: './logs', local: '.' },
-          filename: { on: 'var', var: 'nodejs.log', local: 'nodejs.log' },
-        },
-      ],
-    };
-    const application: LastArrayElement<IWinstonContainerOption['applications']> = {
-      name: 'app',
-      path: { on: 'var', var: './logs', local: '.' },
-      filename: { on: 'var', var: 'nodejs.log', local: 'nodejs.log' },
-    };
-
-    const loggers = WinstonContainer.createLogger(
-      false,
-      { level: 'info', levels: winston.config.syslog.levels },
-      option,
-      application,
-    );
-
-    expect(loggers).toBeTruthy();
+    expect(logApp.name).toEqual('api');
   });
 });
 
@@ -246,19 +79,11 @@ describe('getError', () => {
 
 describe('createLogger', () => {
   it('async', async () => {
-    const option: IWinstonContainerOption = {
-      develop: () => false,
-      logLevel: 'info',
-      applications: [
-        {
-          name: 'app',
-          path: { on: 'var', var: './logs', local: '.' },
-          filename: { on: 'var', var: 'nodejs.log', local: 'nodejs.log' },
-        },
-      ],
+    const option: TWinstonContainerBootstrapOptions<true> = {
+      app: { getOptions: () => ({}) },
     };
 
-    await WinstonContainer.bootstrap(true, option);
+    await WinstonContainer.bootstrap(false, () => false, undefined, option);
 
     const log = WinstonContainer.l('iamfilename');
 
@@ -273,46 +98,31 @@ describe('createLogger', () => {
     log.debug({});
 
     expect(WinstonContainer.it).toBeTruthy();
-    expect(WinstonContainer.it.option).toBeTruthy();
+    expect(WinstonContainer.it.loggers).toBeTruthy();
 
     expect(log).toBeTruthy();
   });
 
   it('sync', () => {
-    const option: IWinstonContainerOption = {
-      develop: () => false,
-      logLevel: 'info',
-      applications: [
-        {
-          name: 'app',
-          path: { on: 'var', var: './logs', local: '.' },
-          filename: { on: 'var', var: 'nodejs.log', local: 'nodejs.log' },
-        },
-      ],
+    const option: TWinstonContainerBootstrapOptions<false> = {
+      app: { getOptions: () => ({}) },
     };
 
-    WinstonContainer.bootstrap(false, option);
+    WinstonContainer.bootstrap(false, () => false, undefined, option);
 
     const log = WinstonContainer.l('app', 'iamfilename');
+
     log.$('test');
 
     expect(WinstonContainer.it).toBeTruthy();
   });
 
   it('error - application not found', () => {
-    const option: IWinstonContainerOption = {
-      develop: () => false,
-      logLevel: 'info',
-      applications: [
-        {
-          name: 'app',
-          path: { on: 'var', var: './logs', local: '.' },
-          filename: { on: 'var', var: 'nodejs.log', local: 'nodejs.log' },
-        },
-      ],
+    const option: TWinstonContainerBootstrapOptions<false> = {
+      app: { getOptions: () => ({}) },
     };
 
-    WinstonContainer.bootstrap(false, option);
+    WinstonContainer.bootstrap(false, () => false, undefined, option);
 
     expect(() => {
       const log = WinstonContainer.l('not-found-application', 'iamfilename');
@@ -323,19 +133,11 @@ describe('createLogger', () => {
   });
 
   it('error - in logging function', () => {
-    const option: IWinstonContainerOption = {
-      develop: () => false,
-      logLevel: 'info',
-      applications: [
-        {
-          name: 'app',
-          path: { on: 'var', var: './logs', local: '.' },
-          filename: { on: 'var', var: 'nodejs.log', local: 'nodejs.log' },
-        },
-      ],
+    const option: TWinstonContainerBootstrapOptions<false> = {
+      app: { getOptions: () => ({}) },
     };
 
-    WinstonContainer.bootstrap(false, option);
+    WinstonContainer.bootstrap(false, () => false, undefined, option);
 
     vi.spyOn(ge, 'getError').mockImplementation(() => {
       throw new Error('for test, one-time');
