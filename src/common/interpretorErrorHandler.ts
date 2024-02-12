@@ -7,7 +7,7 @@ export function interpretorErrorHandler() {
     logger.$('uncaughtException: ', err.message);
     logger.$('uncaughtException: ', err.stack);
 
-    const loggerFunction = logger.$kind === 'pino' ? logger.fatal : logger.crit;
+    const loggerFunction = logger.crit;
 
     loggerFunction({
       id: 'uncaught-exception',
@@ -22,7 +22,7 @@ export function interpretorErrorHandler() {
     const message =
       reason == null ? 'unknown error by [unhandledRejection]' : JSON.stringify(reason);
 
-    const loggerFunction = logger.$kind === 'pino' ? logger.fatal : logger.crit;
+    const loggerFunction = logger.crit;
 
     loggerFunction({
       id: 'unhandled-rejection',

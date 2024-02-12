@@ -1,34 +1,30 @@
-import { CE_DEFAULT_VALUE } from '#/common/const-enum/CE_DEFAULT_VALUE';
-import type { ILogContainerOption, TFilePathKind } from '#/common/interfaces/ILogContainerOption';
 import type { ILogFormat } from '#/common/interfaces/ILogFormat';
 import { ll } from '#/common/ll';
 import { getError } from '#/common/modules/getError';
-import { prepareCreation } from '#/common/modules/prepareCreation';
-import { prepareCreationSync } from '#/common/modules/prepareCreationSync';
-import type { IWinstonContainerOption } from '#/winston/interfaces/IWinstonContainerOption';
+import { CE_WINSTON_DEFAULT_VALUE } from '#/winston/const-enum/CE_WINSTON_DEFAULT_VALUE';
+import type {
+  IWinstonContainerOptions,
+  IWinstonMaeumLogger,
+  TAsyncGetOptions,
+  TSyncGetOptions,
+  TWinstonContainerBootstrapOptions,
+} from '#/winston/interfaces/IWinstonContainerOption';
 import type { IWintonLogger } from '#/winston/interfaces/IWintonLogger';
-import { getFormatter } from '#/winston/modules/getFormatter';
-import { getWinstonContainerOption } from '#/winston/modules/getWinstonContainerOption';
-import { getWinstonLevel } from '#/winston/modules/getWinstonLevel';
+import { getLogMethod } from '#/winston/modules/getLogMethod';
+import { getNonNullableOptions } from '#/winston/modules/getNonNullableOptions';
+import { getWinstonContainerOptions } from '#/winston/modules/getWinstonContainerOption';
 import httpStatusCodes from 'http-status-codes';
 import { isError } from 'my-easy-fp';
 import { basenames } from 'my-node-fp';
-import os from 'node:os';
-import path from 'node:path';
-import type { LastArrayElement } from 'type-fest';
+import { isPromise } from 'util/types';
 import winston from 'winston';
-
-type TWinstionLoggerApplication = {
-  logger: winston.Logger;
-  application: LastArrayElement<IWinstonContainerOption['applications']>;
-};
-
-type TWinstonLoggerContainer = Record<string, TWinstionLoggerApplication>;
 
 export class WinstonContainer {
   static #it: WinstonContainer;
 
   static #isBootstrap: boolean = false;
+
+  static #defaultName: string = CE_WINSTON_DEFAULT_VALUE.DEFAULT_NAME;
 
   public static get it() {
     return WinstonContainer.#it;
@@ -38,102 +34,83 @@ export class WinstonContainer {
     return WinstonContainer.#isBootstrap;
   }
 
-  public static getLogger(
-    args: {
-      level: ReturnType<typeof getWinstonLevel>;
-      levels: typeof winston.config.syslog.levels;
-    },
-    option: IWinstonContainerOption,
-    application: LastArrayElement<IWinstonContainerOption['applications']>,
-    logFilePath: { path: string; filename: string; on: TFilePathKind },
-  ) {
-    if (application.getOption != null) {
-      const transportOption = application.getOption(option, logFilePath, application);
-      const logger = winston.createLogger(transportOption);
-      return { logger, application };
-    }
-
-    const applogFilename = path.join(logFilePath.path, logFilePath.filename);
-
-    const next = {
-      ...application,
-      path: { ...application.path },
-      filename: { ...application.filename },
-    };
-
-    next.path.on = logFilePath.on;
-    next.filename.on = logFilePath.on;
-
-    const logger = winston.createLogger({
-      level: args.level as string,
-      levels: args.levels,
-      defaultMeta: { logger: application.name, pid: process.pid },
-      transports: [
-        new winston.transports.File({
-          level: args.level as string,
-          filename: applogFilename,
-          format: getFormatter(),
-          eol: os.EOL,
-        }),
-      ],
-    });
-
-    return { logger, application: next };
+  public static get defaultName() {
+    return WinstonContainer.#defaultName;
   }
 
-  public static createLogger<T extends boolean>(
-    async: T,
-    args: {
-      level: ReturnType<typeof getWinstonLevel>;
-      levels: typeof winston.config.syslog.levels;
-    },
-    option: IWinstonContainerOption,
-    application: LastArrayElement<IWinstonContainerOption['applications']>,
-  ): T extends true ? Promise<TWinstionLoggerApplication> : TWinstionLoggerApplication;
-  public static createLogger<T extends boolean>(
-    async: T,
-    args: {
-      level: ReturnType<typeof getWinstonLevel>;
-      levels: typeof winston.config.syslog.levels;
-    },
-    option: IWinstonContainerOption,
-    application: LastArrayElement<IWinstonContainerOption['applications']>,
-  ): Promise<TWinstionLoggerApplication> | TWinstionLoggerApplication {
-    if (async) {
-      return (async () => {
-        const logFilePath = await prepareCreation(option, application);
-        return WinstonContainer.getLogger(args, option, application, logFilePath);
-      })();
+  public static getSyncLoggers(
+    name: string,
+    getOptions: TAsyncGetOptions | TSyncGetOptions | undefined,
+    defaultOptions: Partial<winston.LoggerOptions> | undefined,
+  ): IWinstonMaeumLogger | undefined {
+    if (getOptions == null) {
+      const options = getNonNullableOptions();
+      const logger = winston.createLogger(options);
+      return { logger, name, options };
     }
 
-    const logFilePath = prepareCreationSync(option, application);
-    return WinstonContainer.getLogger(args, option, application, logFilePath);
+    const nullables = getOptions(defaultOptions);
+    const options = isPromise(nullables) ? undefined : nullables;
+
+    if (options == null) {
+      return undefined;
+    }
+
+    const logger = winston.createLogger(getNonNullableOptions(options));
+
+    return { logger, name, options };
   }
 
-  public static bootstrap<T extends boolean>(
-    async?: T,
-    nullableOption?: Parameters<typeof getWinstonContainerOption>[0],
-  ): T extends true ? Promise<ILogContainerOption> : ILogContainerOption;
-  public static bootstrap<T extends boolean>(
-    async?: T,
-    nullableOption?: Parameters<typeof getWinstonContainerOption>[0],
-  ): ILogContainerOption | Promise<ILogContainerOption> {
-    const option = getWinstonContainerOption(nullableOption);
-    const level = getWinstonLevel(option.logLevel);
-    const { levels } = winston.config.syslog;
+  public static async getAsyncLoggers(
+    name: string,
+    getOptions: TAsyncGetOptions | TSyncGetOptions | undefined,
+    defaultOptions: Partial<winston.LoggerOptions> | undefined,
+  ): Promise<IWinstonMaeumLogger> {
+    if (getOptions == null) {
+      const options = getNonNullableOptions();
+      const logger = winston.createLogger(options);
+      return { logger, name, options };
+    }
+
+    const nullables = getOptions(defaultOptions);
+    const options = isPromise(nullables) ? await nullables : nullables;
+    const logger = winston.createLogger(getNonNullableOptions(options));
+
+    return { logger, name, options };
+  }
+
+  public static bootstrap<TASYNC extends boolean>(
+    async?: TASYNC,
+    getEnableDebugMessage?: () => boolean,
+    defaultAppName?: string,
+    nullableOption?: TWinstonContainerBootstrapOptions<TASYNC>,
+  ): TASYNC extends true ? Promise<WinstonContainer> : WinstonContainer;
+  public static bootstrap<TASYNC extends boolean>(
+    async?: TASYNC,
+    getEnableDebugMessage?: () => boolean,
+    defaultAppName?: string,
+    nullableOption?: TWinstonContainerBootstrapOptions<TASYNC>,
+  ): Promise<WinstonContainer> | WinstonContainer {
+    if (WinstonContainer.#isBootstrap) {
+      return WinstonContainer.#it;
+    }
+
+    const option = getWinstonContainerOptions<TASYNC>(nullableOption);
+
+    WinstonContainer.#defaultName = defaultAppName ?? CE_WINSTON_DEFAULT_VALUE.DEFAULT_NAME;
 
     if (async) {
       return (async () => {
-        const loggers = await option.applications.reduce(
-          async (prevHandle: Promise<TWinstonLoggerContainer>, application) => {
-            const handle = async (aggregations: TWinstonLoggerContainer) => {
-              const logger = await WinstonContainer.createLogger(
-                true,
-                { level, levels },
-                option,
-                application,
+        const loggers: IWinstonContainerOptions['loggers'] = await Object.entries(option).reduce(
+          async (prevHandle: Promise<IWinstonContainerOptions['loggers']>, [name, application]) => {
+            const handle = async (aggregations: IWinstonContainerOptions['loggers']) => {
+              const logger = await WinstonContainer.getAsyncLoggers(
+                name,
+                application.getOptions,
+                application.defaultOptions,
               );
-              return { ...aggregations, [logger.application.name]: logger };
+
+              return { ...aggregations, [name]: logger };
             };
 
             return handle(await prevHandle);
@@ -141,70 +118,46 @@ export class WinstonContainer {
           Promise.resolve({}),
         );
 
-        WinstonContainer.#it = new WinstonContainer(option, loggers);
+        WinstonContainer.#it = new WinstonContainer({
+          getEnableDebugMessage: getEnableDebugMessage ?? (() => false),
+          loggers,
+        });
         WinstonContainer.#isBootstrap = true;
 
-        return option;
+        return WinstonContainer.#it;
       })(); // end of async logic
     }
 
-    const loggers = option.applications.reduce(
-      (aggregations: TWinstonLoggerContainer, application) => {
-        const logger = WinstonContainer.createLogger(false, { level, levels }, option, application);
-        return { ...aggregations, [logger.application.name]: logger };
-      },
-      {},
-    );
+    const loggers = Object.entries(option).reduce((aggregations, [name, application]) => {
+      const logger = WinstonContainer.getSyncLoggers(
+        name,
+        application.getOptions,
+        application.defaultOptions,
+      );
 
-    WinstonContainer.#it = new WinstonContainer(option, loggers);
+      if (logger == null) {
+        return aggregations;
+      }
+
+      return { ...aggregations, [name]: logger };
+    }, {});
+
+    WinstonContainer.#it = new WinstonContainer({
+      getEnableDebugMessage: getEnableDebugMessage ?? (() => false),
+      loggers,
+    });
     WinstonContainer.#isBootstrap = true;
 
-    return option;
-  }
-
-  #option: ILogContainerOption;
-
-  #loggers: TWinstonLoggerContainer;
-
-  constructor(option: ILogContainerOption, loggers: TWinstonLoggerContainer) {
-    this.#option = option;
-    this.#loggers = loggers;
-  }
-
-  get option() {
-    return this.#option;
-  }
-
-  public static getLogMethod(
-    level: keyof winston.config.SyslogConfigSetLevels,
-    logger: winston.Logger,
-  ) {
-    switch (level) {
-      case 'emerg':
-        return logger.emerg;
-      case 'alert':
-        return logger.alert;
-      case 'crit':
-        return logger.crit;
-      case 'error':
-        return logger.error;
-      case 'warning':
-        return logger.warning;
-      case 'notice':
-        return logger.notice;
-      case 'info':
-        return logger.info;
-      case 'debug':
-        return logger.debug;
-      default:
-        return logger.debug;
-    }
+    return WinstonContainer.#it;
   }
 
   public static l(rawName: string, rawFullname?: string): Readonly<IWintonLogger> {
     const { name, fullname } =
       rawFullname == null
-        ? { name: CE_DEFAULT_VALUE.APPLICATION_NAME, fullname: rawName }
+        ? {
+            name: WinstonContainer.defaultName,
+            fullname: rawName,
+          }
         : { name: rawName, fullname: rawFullname };
     const filename = basenames(fullname, ['.ts', '.tsx', '.mts', '.cts']);
 
@@ -214,7 +167,7 @@ export class WinstonContainer {
       debugLogger =
         debugLogger != null
           ? debugLogger
-          : ll(process.env.DEBUG_CHANNEL, filename, WinstonContainer.#it.#option.develop());
+          : ll(process.env.DEBUG_CHANNEL, filename, WinstonContainer.#it.#getEnableDebugMessage());
 
       const [formatter, ...rest] = args;
       debugLogger(formatter, ...rest);
@@ -237,7 +190,7 @@ export class WinstonContainer {
       try {
         const status = content.status ?? httpStatusCodes.OK;
         const id = content.id ?? 'SYS';
-        const func = WinstonContainer.getLogMethod(level, application.logger);
+        const func = getLogMethod(level, application.logger);
 
         func('', {
           ...content,
@@ -268,5 +221,18 @@ export class WinstonContainer {
         debugLogging(...args);
       },
     };
+  }
+
+  #getEnableDebugMessage: IWinstonContainerOptions['getEnableDebugMessage'];
+
+  #loggers: IWinstonContainerOptions['loggers'];
+
+  constructor(options: IWinstonContainerOptions) {
+    this.#getEnableDebugMessage = options.getEnableDebugMessage;
+    this.#loggers = options.loggers;
+  }
+
+  get loggers(): IWinstonContainerOptions['loggers'] {
+    return this.#loggers;
   }
 }
