@@ -10,8 +10,9 @@ import type { IRequestLoggerOption } from '#/http/interfaces/IRequestLoggerOptio
 import type { PartialDeep } from 'type-fest';
 
 export function getRequestLoggerOption(
-  option?: PartialDeep<Omit<IRequestLoggerOption, 'logger'>> & {
+  option?: PartialDeep<Omit<IRequestLoggerOption, 'logger' | 'contents'>> & {
     logger?: IRequestLoggerOption['logger'];
+    contents?: IRequestLoggerOption['contents'];
   },
 ): IRequestLoggerOption {
   const getLogId =
