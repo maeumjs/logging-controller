@@ -56,7 +56,8 @@ export class WinstonContainer {
       return undefined;
     }
 
-    const logger = winston.createLogger(getNonNullableOptions(options));
+    const defaultMeta = { logger: WinstonContainer.#defaultName, pid: process.pid };
+    const logger = winston.createLogger(getNonNullableOptions({ ...options, defaultMeta }));
 
     return { logger, name, options };
   }
@@ -74,7 +75,8 @@ export class WinstonContainer {
 
     const nullables = getOptions(defaultOptions);
     const options = isPromise(nullables) ? await nullables : nullables;
-    const logger = winston.createLogger(getNonNullableOptions(options));
+    const defaultMeta = { logger: WinstonContainer.#defaultName, pid: process.pid };
+    const logger = winston.createLogger(getNonNullableOptions({ ...options, defaultMeta }));
 
     return { logger, name, options };
   }

@@ -45,7 +45,7 @@ export class RequestLogger {
 
   static async getPayload(
     data: unknown,
-    action: CE_LOGGING_ACTION_CODE,
+    action: CE_LOGGING_ACTION_CODE | undefined,
     handler: ((data: unknown) => string) | undefined,
     option: IRequestLoggerOption,
   ): Promise<unknown> {
@@ -108,7 +108,7 @@ export class RequestLogger {
 
       req.setRequestLogging();
 
-      const route = { routePath: req.routeOptions.url, method: req.method };
+      const route = { routePath: req.routeOptions.url ?? 'route-path-404', method: req.method };
 
       // exclude check
       if (this.#option.excludes.get(getRoutePathKey(route))) {
@@ -135,35 +135,36 @@ export class RequestLogger {
         id: this.#option.getLogId(route),
         status: reply.statusCode,
         timestamp: formatISO(new Date()),
-        duration: reply.getResponseTime(),
+        duration: reply.elapsedTime,
         tid: req.id,
         ...(err != null ? getError({ err }) : {}),
         body: {
           method: getHttpMethod(req.raw.method),
           url: req.raw.url ?? '/http/logging/unknown',
+          routerPath: req.routeOptions.url,
           curl: this.#option.isCurl ? RequestCurlCreator.it.create(req, route) : undefined,
           request: {
             queries: await RequestLogger.getPayload(
               req.query,
-              action.request.querystring,
+              action.request?.querystring,
               handler?.request.querystring,
               this.#option,
             ),
             headers: await RequestLogger.getPayload(
               req.headers,
-              action.request.headers,
+              action.request?.headers,
               handler?.request.headers as (data: unknown) => string,
               this.#option,
             ),
             params: await RequestLogger.getPayload(
               req.params,
-              action.request.params,
+              action.request?.params,
               handler?.request.params as (data: unknown) => string,
               this.#option,
             ),
             body: await RequestLogger.getPayload(
               req.body,
-              action.request.body,
+              action.request?.body,
               handler?.request.body as (data: unknown) => string,
               this.#option,
             ),
@@ -171,13 +172,13 @@ export class RequestLogger {
           reply: {
             headers: await RequestLogger.getPayload(
               reply.getHeaders(),
-              action.reply.headers,
+              action.reply?.headers,
               handler?.reply.headers as (data: unknown) => string,
               this.#option,
             ),
             payload: await RequestLogger.getPayload(
               reply.getReplyPayload(),
-              action.reply.payload,
+              action.reply?.payload,
               handler?.reply.payload as (data: unknown) => string,
               this.#option,
             ),
@@ -228,10 +229,12 @@ export class RequestLogger {
 
       fastify.register(requestFlagsPlugin);
 
-      fastify.addHook('onSend', (_req, reply, payload, done) => {
+      fastify.addHook('onSend', (req, reply, payload, done) => {
         if (isPayloadLogging) {
           reply.setReplyPayload(payload);
         }
+
+        reply.header('tid', req.id);
 
         done(null, payload);
       });

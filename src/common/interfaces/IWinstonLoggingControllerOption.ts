@@ -1,5 +1,5 @@
 import type { IRequestCurlCreatorOption } from '#/http/interfaces/IRequestCurlCreatorOption';
-import type { IRequestLoggerOption } from '#/http/interfaces/IRequestLoggerOption';
+import type { getRequestLoggerOption } from '#/http/modules/getRequestLoggerOption';
 import type { TWinstonContainerBootstrapOptions } from '#/winston/interfaces/IWinstonContainerOption';
 
 export interface IWinstonLoggingControllerOption<TASYNC extends boolean = false> {
@@ -14,6 +14,6 @@ export interface IWinstonLoggingControllerOption<TASYNC extends boolean = false>
         defaultAppName?: string;
         loggers?: TWinstonContainerBootstrapOptions<false>;
       };
-  request?: Partial<IRequestLoggerOption>;
+  request?: Parameters<typeof getRequestLoggerOption>[0];
   curl?: Partial<IRequestCurlCreatorOption>;
 }

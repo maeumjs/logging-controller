@@ -4,6 +4,7 @@ import { getRequestCurlCreatorOption } from '#/http/modules/getRequestCurlCreato
 import { safeStringify } from '@maeum/tools';
 import type { FastifyRequest } from 'fastify';
 import { createFromFastify3, encodeQuerystring } from 'jin-curlize';
+import { isError } from 'my-easy-fp';
 
 export class RequestCurlCreator {
   static #it: RequestCurlCreator;
@@ -56,9 +57,8 @@ export class RequestCurlCreator {
       const command = safeStringify(createFromFastify3(req, this.#option.curl)); // escape for json object
 
       return command === '' ? undefined : command;
-    } catch (catched) {
-      const err =
-        catched instanceof Error ? catched : new Error(`unknown error raised from ${__filename}`);
+    } catch (caught) {
+      const err = isError(caught, new Error(`unknown error raised from ${__filename}`));
 
       this.#option.logger.$(err.message);
       this.#option.logger.$(err.stack);

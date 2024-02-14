@@ -2,6 +2,7 @@ import type { IFastMakerRoutePath } from '#/http/interfaces/IFastMakerRoutePath'
 import type { IHTTPLogRecordAction } from '#/http/interfaces/IHTTPLogRecordAction';
 import type { IHTTPLogRecordHandler } from '#/http/interfaces/IHTTPLogRecordHandler';
 import type { IWintonLogger } from '#/winston/interfaces/IWintonLogger';
+import type { PartialDeep } from 'type-fest';
 
 export interface IRequestLoggerOption {
   /** log-id create function */
@@ -41,7 +42,7 @@ export interface IRequestLoggerOption {
    * log records yourself, you can set up handlers.
    */
   contents: {
-    default: IHTTPLogRecordAction;
+    default: PartialDeep<IHTTPLogRecordAction>;
     actions: Map<string, IHTTPLogRecordAction>;
     handlers: Map<string, IHTTPLogRecordHandler>;
   };
