@@ -12,7 +12,7 @@ import type { PartialDeep } from 'type-fest';
 export function getRequestLoggerOption(
   option?: PartialDeep<Omit<IRequestLoggerOption, 'logger' | 'contents'>> & {
     logger?: IRequestLoggerOption['logger'];
-    contents?: IRequestLoggerOption['contents'];
+    contents?: Partial<IRequestLoggerOption['contents']>;
   },
 ): IRequestLoggerOption {
   const getLogId =
