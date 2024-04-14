@@ -120,8 +120,8 @@ module.exports = {
     },
     {
       files: [
-        'src/winston/WinstonContainer.ts',
-        'src/winston/interfaces/IWintonLogger.ts',
+        'src/loggings/winston/WinstonLoggers.ts',
+        'src/loggings/winston/interfaces/IWintonLogger.ts',
         'src/pino/PinoContainer.ts',
         'src/pino/interfaces/IPinoLogger.ts',
       ],
@@ -132,7 +132,7 @@ module.exports = {
       },
     },
     {
-      files: ['src/http/request/RequestLogger.ts'],
+      files: ['src/http/logging/RequestLogger.ts'],
       rules: {
         '@typescript-eslint/no-floating-promises': ['off'],
       },

@@ -1,41 +1,33 @@
-import type { IWinstonLoggingControllerOption } from '#/common/interfaces/IWinstonLoggingControllerOption';
 import { interpretorErrorHandler } from '#/common/interpretorErrorHandler';
-import { RequestCurlCreator } from '#/http/request/RequestCurlCreator';
-import { RequestLogger } from '#/http/request/RequestLogger';
-import { WinstonContainer } from '#/winston/WinstonContainer';
+import { makeCurlCreator } from '#/http/curl/makeCurlCreator';
+import { makeRequestLogger } from '#/http/logging/makeRequestLogger';
+import type { IWinstonLoggingControllerOption } from '#/loggings/winston/interfaces/IWinstonLoggingControllerOption';
+import { makeWinstonLoggers } from '#/loggings/winston/makeWinstonLoggers';
+import type { AwilixContainer } from 'awilix';
 
-export function bootstrapWinston<TASYNC extends boolean>(
+export function makeLoggers<TASYNC extends boolean>(
   async: TASYNC,
+  container: AwilixContainer,
   option?: IWinstonLoggingControllerOption<TASYNC>,
 ): TASYNC extends true ? Promise<boolean> : boolean;
-export function bootstrapWinston<TASYNC extends boolean>(
+export function makeLoggers<TASYNC extends boolean>(
   async: TASYNC,
+  container: AwilixContainer,
   option?: IWinstonLoggingControllerOption<TASYNC>,
 ): Promise<boolean> | boolean {
   if (async) {
     return (async () => {
-      await WinstonContainer.bootstrap(
-        true,
-        option?.winston?.getEnableDebugMessage,
-        option?.winston?.defaultAppName,
-        option?.winston?.loggers,
-      );
-      RequestLogger.bootstrap(option?.request);
-      RequestCurlCreator.bootstrap(option?.curl);
-      interpretorErrorHandler();
+      await makeWinstonLoggers(container, async, option?.winston);
+      makeCurlCreator(container, option?.curl);
+      makeRequestLogger(container, option?.request);
+      interpretorErrorHandler(container);
       return true;
     })();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  WinstonContainer.bootstrap(
-    false,
-    option?.winston?.getEnableDebugMessage,
-    option?.winston?.defaultAppName,
-    option?.winston?.loggers,
-  );
-  RequestLogger.bootstrap(option?.request);
-  RequestCurlCreator.bootstrap(option?.curl);
-  interpretorErrorHandler();
+  makeWinstonLoggers(container, async as false, option?.winston);
+  makeCurlCreator(container, option?.curl);
+  makeRequestLogger(container, option?.request);
+  interpretorErrorHandler(container);
   return false;
 }
