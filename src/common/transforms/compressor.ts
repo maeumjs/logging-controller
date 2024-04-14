@@ -1,5 +1,5 @@
 import { safeStringify } from '#/common/transforms/safeStringify';
-import { escape } from '#/http/modules/escape';
+import { escape } from '#/http/logging/modules/escape';
 import { compress } from 'snappy';
 
 export async function compressor(data: unknown): Promise<string> {

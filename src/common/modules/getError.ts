@@ -1,5 +1,5 @@
 import type { ILogFormat } from '#/common/interfaces/ILogFormat';
-import { escape } from '#/http/modules/escape';
+import { escape } from '#/http/logging/modules/escape';
 
 export function getError(
   content?: Partial<ILogFormat & { err: Error }>,
