@@ -13,7 +13,7 @@ export function getWinstonLoggersSyncOptions(
   const next = Array.from(applications.entries()).reduce<
     Map<string, TWinstonLoggersSyncBootstrapOption>
   >((aggregated, [name, application]) => {
-    if (name == null || application == null) {
+    if (application == null) {
       return aggregated;
     }
 

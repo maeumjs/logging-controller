@@ -1,4 +1,4 @@
-import { MAEUM_LOGGERS_SYMBOL_KEY } from '#/common/symbols/MAEUM_LOGGERS_SYMBOL_KEY';
+import { $YMBOL_KEY_MAEUM_LOGGERS } from '#/common/symbols/SYMBOL_KEY_MAEUM_LOGGERS';
 import type { IFastMakerRoutePath } from '#/http/common/interfaces/IFastMakerRoutePath';
 import type { ICurlCreatorOption } from '#/http/curl/interfaces/IRequestCurlCreatorOption';
 import type { MaeumLoggers } from '#/loggings/common/MaeumLoggers';
@@ -16,7 +16,7 @@ export class CurlCreator {
 
   constructor(option: ICurlCreatorOption, container: IClassContainer) {
     this.#option = option;
-    this.#logger = container.resolve<MaeumLoggers>(MAEUM_LOGGERS_SYMBOL_KEY).l('curl-creator');
+    this.#logger = container.resolve<MaeumLoggers>($YMBOL_KEY_MAEUM_LOGGERS).l('curl-creator');
   }
 
   create(req: FastifyRequest, route?: Omit<IFastMakerRoutePath, 'filePath'>): string | undefined {

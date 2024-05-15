@@ -36,8 +36,8 @@ importers:
         specifier: ^1.6.1
         version: 1.6.1
       my-easy-fp:
-        specifier: ^0.21.0
-        version: 0.21.0
+        specifier: ^0.22.0
+        version: 0.22.0
       my-node-fp:
         specifier: ^0.9.0
         version: 0.9.0

@@ -1,4 +1,4 @@
-import { CURL_CREATOR_SYMBOL_KEY } from '#/common/symbols/CURL_CREATOR_SYMBOL_KEY';
+import { $YMBOL_KEY_CURL_CREATOR } from '#/common/symbols/SYMBOL_KEY_CURL_CREATOR';
 import { CurlCreator } from '#/http/curl/CurlCreator';
 import { getCurlCreatorOption } from '#/http/curl/modules/getCurlCreatorOption';
 import type { IClassContainer } from '@maeum/tools';
@@ -10,7 +10,7 @@ export function makeCurlCreator(
   const option = getCurlCreatorOption(nullableOption);
   const curlCreator = new CurlCreator(option, container);
 
-  container.register(CURL_CREATOR_SYMBOL_KEY, curlCreator);
+  container.register($YMBOL_KEY_CURL_CREATOR, curlCreator);
 
   return option;
 }

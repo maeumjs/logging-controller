@@ -1,5 +1,5 @@
-import { MAEUM_LOGGERS_SYMBOL_KEY } from '#/common/symbols/MAEUM_LOGGERS_SYMBOL_KEY';
-import { WINSTON_LOGGERS_SYMBOL_KEY } from '#/common/symbols/WINSTON_LOGGERS_SYMBOL_KEY';
+import { $YMBOL_KEY_MAEUM_LOGGERS } from '#/common/symbols/SYMBOL_KEY_MAEUM_LOGGERS';
+import { $YMBOL_KEY_WINSTON_LOGGERS } from '#/common/symbols/SYMBOL_KEY_WINSTON_LOGGERS';
 import { WinstonLoggers } from '#/loggings/winston/WinstonLoggers';
 import type { IWinstonLoggersOptions } from '#/loggings/winston/interfaces/IWinstonLoggersOptions';
 import type { IWinstonMaeumLogger } from '#/loggings/winston/interfaces/IWinstonMaeumLogger';
@@ -36,14 +36,16 @@ export async function makeAsyncWinstonLoggers(
     Promise.resolve(new Map<string, IWinstonMaeumLogger>()),
   );
 
+  const getEnableDebugMessage =
+    makeOptions?.getEnableDebugMessage != null ? makeOptions?.getEnableDebugMessage : () => false;
   const winstonLoggers = new WinstonLoggers({
-    getEnableDebugMessage: makeOptions?.getEnableDebugMessage ?? (() => false),
+    getEnableDebugMessage,
     loggers,
     defaultAppName: makeOptions?.defaultAppName,
   });
 
-  container.register(WINSTON_LOGGERS_SYMBOL_KEY, winstonLoggers);
-  container.register(MAEUM_LOGGERS_SYMBOL_KEY, winstonLoggers);
+  container.register($YMBOL_KEY_WINSTON_LOGGERS, winstonLoggers);
+  container.register($YMBOL_KEY_MAEUM_LOGGERS, winstonLoggers);
 
   return winstonLoggers;
 }

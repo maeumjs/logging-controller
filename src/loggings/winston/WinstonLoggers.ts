@@ -30,6 +30,10 @@ export class WinstonLoggers extends MaeumLoggers {
     return this.#loggers;
   }
 
+  get enableDebugMessage() {
+    return this.#getEnableDebugMessage();
+  }
+
   override l(rawName: string, rawFullname?: string): Readonly<IWintonLoggers> {
     const { name, fullname } =
       rawFullname == null
