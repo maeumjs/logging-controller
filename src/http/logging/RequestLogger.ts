@@ -4,13 +4,15 @@ import { CURL_CREATOR_SYMBOL_KEY } from '#/common/symbols/CURL_CREATOR_SYMBOL_KE
 import { MAEUM_LOGGERS_SYMBOL_KEY } from '#/common/symbols/MAEUM_LOGGERS_SYMBOL_KEY';
 import { getHttpMethod } from '#/http/common/modules/getHttpMethod';
 import { getRoutePathKey } from '#/http/common/modules/getRoutePathKey';
+import type { CurlCreator } from '#/http/curl/CurlCreator';
 import { CE_REQUEST_LOGGING_RESULT_CODE } from '#/http/logging/const-enum/CE_REQUEST_LOGGING_RESULT_CODE';
 import type { IRequestLoggerOption } from '#/http/logging/interfaces/IRequestLoggerOption';
 import { getErrorLog } from '#/http/logging/modules/getErrorLog';
 import { getPayload } from '#/http/logging/modules/getPayload';
 import { requestFlagsPlugin } from '#/http/plugin/requestFlagsPlugin';
+import type { MaeumLoggers } from '#/loggings/common/MaeumLoggers';
 import type { IMaeumLoggers } from '#/loggings/common/interfaces/IMaeumLogger';
-import type { AwilixContainer } from 'awilix';
+import type { IClassContainer } from '@maeum/tools';
 import formatISO from 'date-fns/formatISO';
 import type {
   FastifyInstance,
@@ -26,14 +28,14 @@ import { isError } from 'my-easy-fp';
 export class RequestLogger {
   #option: IRequestLoggerOption;
 
-  #container: AwilixContainer;
+  #container: IClassContainer;
 
   #logger: IMaeumLoggers;
 
-  constructor(option: IRequestLoggerOption, container: AwilixContainer) {
+  constructor(option: IRequestLoggerOption, container: IClassContainer) {
     this.#option = option;
     this.#container = container;
-    this.#logger = container.resolve(MAEUM_LOGGERS_SYMBOL_KEY).l('request-logger');
+    this.#logger = container.resolve<MaeumLoggers>(MAEUM_LOGGERS_SYMBOL_KEY).l('request-logger');
   }
 
   async logging(req: FastifyRequest, reply: FastifyReply) {
@@ -58,7 +60,7 @@ export class RequestLogger {
       }
 
       const err = req.getRequestError();
-      const curlCreator = this.#container.resolve(CURL_CREATOR_SYMBOL_KEY);
+      const curlCreator = this.#container.resolve<CurlCreator>(CURL_CREATOR_SYMBOL_KEY);
 
       const action =
         this.#option.contents.actions.get(getRoutePathKey(route)) ?? this.#option.contents.default;

@@ -1,15 +1,13 @@
-import type {
-  IWinstonMaeumLogger,
-  TAsyncGetOptions,
-  TSyncGetOptions,
-} from '#/loggings/winston/interfaces/IWinstonContainerOption';
+import type { IWinstonMaeumLogger } from '#/loggings/winston/interfaces/IWinstonMaeumLogger';
+import type { TWinsonSyncGetOptions } from '#/loggings/winston/interfaces/TWinsonSyncGetOptions';
+import type { TWinstonAsyncGetOptions } from '#/loggings/winston/interfaces/TWinstonAsyncGetOptions';
 import { getNonNullableOptions } from '#/loggings/winston/options/getNonNullableOptions';
 import { isPromise } from 'util/types';
 import winston from 'winston';
 
-export async function getAsyncLoggers(
+export async function getWinstonAsyncLoggers(
   name: string,
-  getOptions?: TAsyncGetOptions | TSyncGetOptions,
+  getOptions?: TWinstonAsyncGetOptions | TWinsonSyncGetOptions,
   partialOptions?: Partial<winston.LoggerOptions>,
 ): Promise<IWinstonMaeumLogger> {
   if (getOptions == null) {

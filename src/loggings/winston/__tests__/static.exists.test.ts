@@ -1,9 +1,9 @@
 import * as ge from '#/common/modules/getError';
 import { WinstonLoggers } from '#/loggings/winston/WinstonLoggers';
 import { CE_WINSTON_DEFAULT_VALUE } from '#/loggings/winston/const-enum/CE_WINSTON_DEFAULT_VALUE';
-import type { IWinstonLoggersOptions } from '#/loggings/winston/interfaces/IWinstonContainerOption';
-import { getAsyncLoggers } from '#/loggings/winston/modules/getAsyncLoggers';
-import { getSyncLoggers } from '#/loggings/winston/modules/getSyncLoggers';
+import type { IWinstonLoggersOptions } from '#/loggings/winston/interfaces/IWinstonLoggersOptions';
+import { getWinstonAsyncLoggers } from '#/loggings/winston/modules/getWinstonAsyncLoggers';
+import { getWinstonSyncLoggers } from '#/loggings/winston/modules/getWinstonSyncLoggers';
 import fs from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -20,7 +20,7 @@ vi.mock('my-node-fp', async () => {
 
 describe('getSyncLoggers', () => {
   it('sync function', async () => {
-    const logApp = getSyncLoggers('api', (defaultOptions) => defaultOptions ?? {}, {
+    const logApp = getWinstonSyncLoggers('api', (defaultOptions) => defaultOptions ?? {}, {
       levels: CE_WINSTON_DEFAULT_VALUE.LEVELS,
     });
 
@@ -29,7 +29,7 @@ describe('getSyncLoggers', () => {
 
   it('async function', async () => {
     expect(() => {
-      getSyncLoggers('api', async (defaultOptions) => defaultOptions ?? {}, {
+      getWinstonSyncLoggers('api', async (defaultOptions) => defaultOptions ?? {}, {
         levels: CE_WINSTON_DEFAULT_VALUE.LEVELS,
       });
     }).toThrowError();
@@ -38,15 +38,19 @@ describe('getSyncLoggers', () => {
 
 describe('getAsyncLoggers', () => {
   it('async function', async () => {
-    const logApp = await getAsyncLoggers('api', async (defaultOptions) => defaultOptions ?? {}, {
-      levels: CE_WINSTON_DEFAULT_VALUE.LEVELS,
-    });
+    const logApp = await getWinstonAsyncLoggers(
+      'api',
+      async (defaultOptions) => defaultOptions ?? {},
+      {
+        levels: CE_WINSTON_DEFAULT_VALUE.LEVELS,
+      },
+    );
 
     expect(logApp.name).toEqual('api');
   });
 
   it('sync function', async () => {
-    const logApp = await getAsyncLoggers('api', (defaultOptions) => defaultOptions ?? {}, {
+    const logApp = await getWinstonAsyncLoggers('api', (defaultOptions) => defaultOptions ?? {}, {
       levels: CE_WINSTON_DEFAULT_VALUE.LEVELS,
     });
 
@@ -76,7 +80,7 @@ describe('createLogger', () => {
     const defaultName = 'app';
     const option: IWinstonLoggersOptions = {
       getEnableDebugMessage: () => true,
-      loggers: new Map([[defaultName, await getAsyncLoggers(defaultName)]]),
+      loggers: new Map([[defaultName, await getWinstonAsyncLoggers(defaultName)]]),
     };
     const winston = new WinstonLoggers(option);
     const log = winston.l('iamfilename');
@@ -101,7 +105,7 @@ describe('createLogger', () => {
     const defaultName = 'app';
     const option: IWinstonLoggersOptions = {
       getEnableDebugMessage: () => true,
-      loggers: new Map([[defaultName, getSyncLoggers(defaultName)]]),
+      loggers: new Map([[defaultName, getWinstonSyncLoggers(defaultName)]]),
     };
     const winston = new WinstonLoggers(option);
     const log = winston.l('iamfilename');
@@ -126,7 +130,7 @@ describe('createLogger', () => {
     const defaultName = 'app';
     const option: IWinstonLoggersOptions = {
       getEnableDebugMessage: () => true,
-      loggers: new Map([[defaultName, getSyncLoggers(defaultName)]]),
+      loggers: new Map([[defaultName, getWinstonSyncLoggers(defaultName)]]),
     };
     const winston = new WinstonLoggers(option);
 
@@ -142,7 +146,7 @@ describe('createLogger', () => {
     const defaultName = 'app';
     const option: IWinstonLoggersOptions = {
       getEnableDebugMessage: () => true,
-      loggers: new Map([[defaultName, getSyncLoggers(defaultName)]]),
+      loggers: new Map([[defaultName, getWinstonSyncLoggers(defaultName)]]),
     };
     const winston = new WinstonLoggers(option);
 

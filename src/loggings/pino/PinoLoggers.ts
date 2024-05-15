@@ -2,35 +2,35 @@ import type { ILogFormat } from '#/common/interfaces/ILogFormat';
 import { ll } from '#/common/ll';
 import { getError } from '#/common/modules/getError';
 import { MaeumLoggers } from '#/loggings/common/MaeumLoggers';
-import { CE_WINSTON_DEFAULT_VALUE } from '#/loggings/winston/const-enum/CE_WINSTON_DEFAULT_VALUE';
-import type { IWinstonLoggersOptions } from '#/loggings/winston/interfaces/IWinstonLoggersOptions';
-import type { IWintonLoggers } from '#/loggings/winston/interfaces/IWintonLoggers';
-import { getWinstonLogMethod } from '#/loggings/winston/modules/getWinstonLogMethod';
+import { CE_PINO_DEFAULT_VALUE } from '#/loggings/pino/const-enum/CE_PINO_DEFAULT_VALUE';
+import type { IPinoLoggers } from '#/loggings/pino/interfaces/IPinoLoggers';
+import type { IPinoLoggersOptions } from '#/loggings/pino/interfaces/IPinoLoggersOptions';
+import { getPinoLogMethod } from '#/loggings/pino/modules/getPinoLogMethod';
 import httpStatusCodes from 'http-status-codes';
 import { isError } from 'my-easy-fp';
 import { basenames } from 'my-node-fp';
-import type winston from 'winston';
+import type pino from 'pino';
 
-export class WinstonLoggers extends MaeumLoggers {
-  #getEnableDebugMessage: IWinstonLoggersOptions['getEnableDebugMessage'];
+export class PinoLoggers extends MaeumLoggers {
+  #getEnableDebugMessage: IPinoLoggersOptions['getEnableDebugMessage'];
 
-  #loggers: IWinstonLoggersOptions['loggers'];
+  #loggers: IPinoLoggersOptions['loggers'];
 
   #defaultName: string;
 
-  constructor(options: IWinstonLoggersOptions) {
+  constructor(options: IPinoLoggersOptions) {
     super();
 
     this.#getEnableDebugMessage = options.getEnableDebugMessage;
     this.#loggers = options.loggers;
-    this.#defaultName = options.defaultAppName ?? CE_WINSTON_DEFAULT_VALUE.DEFAULT_NAME;
+    this.#defaultName = options.defaultAppName ?? CE_PINO_DEFAULT_VALUE.DEFAULT_NAME;
   }
 
-  get loggers(): IWinstonLoggersOptions['loggers'] {
+  get loggers(): IPinoLoggersOptions['loggers'] {
     return this.#loggers;
   }
 
-  override l(rawName: string, rawFullname?: string): Readonly<IWintonLoggers> {
+  override l(rawName: string, rawFullname?: string): Readonly<IPinoLoggers> {
     const { name, fullname } =
       rawFullname == null
         ? { name: this.#defaultName, fullname: rawName }
@@ -49,10 +49,7 @@ export class WinstonLoggers extends MaeumLoggers {
       debugLogger(formatter, ...rest);
     };
 
-    const doLogging = (
-      level: keyof winston.config.SyslogConfigSetLevels,
-      content: Partial<ILogFormat & { err: Error }>,
-    ) => {
+    const doLogging = (level: pino.Level, content: Partial<ILogFormat & { err: Error }>) => {
       const application = this.#loggers.get(name);
 
       if (application == null) {
@@ -62,7 +59,7 @@ export class WinstonLoggers extends MaeumLoggers {
       try {
         const status = content.status ?? httpStatusCodes.OK;
         const id = content.id ?? 'SYS';
-        const func = getWinstonLogMethod(level, application.logger);
+        const func = getPinoLogMethod(level, application.logger);
 
         func('', {
           ...content,
@@ -80,15 +77,13 @@ export class WinstonLoggers extends MaeumLoggers {
     };
 
     return {
-      $kind: 'winston',
-      emerg: (content: Partial<ILogFormat & { err: Error }>) => doLogging('emerg', content),
-      alert: (content: Partial<ILogFormat & { err: Error }>) => doLogging('alert', content),
-      crit: (content: Partial<ILogFormat & { err: Error }>) => doLogging('crit', content),
-      error: (content: Partial<ILogFormat & { err: Error }>) => doLogging('error', content),
-      warning: (content: Partial<ILogFormat & { err: Error }>) => doLogging('warning', content),
-      notice: (content: Partial<ILogFormat & { err: Error }>) => doLogging('notice', content),
-      info: (content: Partial<ILogFormat & { err: Error }>) => doLogging('info', content),
+      $kind: 'pino',
+      trace: (content: Partial<ILogFormat & { err: Error }>) => doLogging('trace', content),
       debug: (content: Partial<ILogFormat & { err: Error }>) => doLogging('debug', content),
+      warn: (content: Partial<ILogFormat & { err: Error }>) => doLogging('warn', content),
+      fatal: (content: Partial<ILogFormat & { err: Error }>) => doLogging('fatal', content),
+      error: (content: Partial<ILogFormat & { err: Error }>) => doLogging('error', content),
+      info: (content: Partial<ILogFormat & { err: Error }>) => doLogging('info', content),
       $: (...args: any[]) => {
         debugLogging(...args);
       },

@@ -1,6 +1,6 @@
 import { CE_WINSTON_DEFAULT_VALUE } from '#/loggings/winston/const-enum/CE_WINSTON_DEFAULT_VALUE';
 import { getNonNullableOptions } from '#/loggings/winston/options/getNonNullableOptions';
-import { createConsoleTransport } from '#/loggings/winston/transports/createConsoleTransport';
+import { makeWinstonConsoleTransport } from '#/loggings/winston/transports/makeWinstonConsoleTransport';
 import { describe, expect, it } from 'vitest';
 
 describe('getNonNullableOptions', () => {
@@ -18,7 +18,7 @@ describe('getNonNullableOptions', () => {
       level: 'error',
       levels: CE_WINSTON_DEFAULT_VALUE.LEVELS,
       defaultMeta: { name: 'api' },
-      transports: [createConsoleTransport()],
+      transports: [makeWinstonConsoleTransport()],
     });
 
     expect(options.level).toEqual('error');

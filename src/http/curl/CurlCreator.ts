@@ -1,9 +1,10 @@
 import { MAEUM_LOGGERS_SYMBOL_KEY } from '#/common/symbols/MAEUM_LOGGERS_SYMBOL_KEY';
 import type { IFastMakerRoutePath } from '#/http/common/interfaces/IFastMakerRoutePath';
 import type { ICurlCreatorOption } from '#/http/curl/interfaces/IRequestCurlCreatorOption';
+import type { MaeumLoggers } from '#/loggings/common/MaeumLoggers';
 import type { IMaeumLoggers } from '#/loggings/common/interfaces/IMaeumLogger';
+import type { IClassContainer } from '@maeum/tools';
 import { safeStringify } from '@maeum/tools';
-import type { AwilixContainer } from 'awilix';
 import type { FastifyRequest } from 'fastify';
 import { createFromFastify3 } from 'jin-curlize';
 import { isError } from 'my-easy-fp';
@@ -13,9 +14,9 @@ export class CurlCreator {
 
   #logger: IMaeumLoggers;
 
-  constructor(option: ICurlCreatorOption, container: AwilixContainer) {
+  constructor(option: ICurlCreatorOption, container: IClassContainer) {
     this.#option = option;
-    this.#logger = container.resolve(MAEUM_LOGGERS_SYMBOL_KEY).l('curl-creator');
+    this.#logger = container.resolve<MaeumLoggers>(MAEUM_LOGGERS_SYMBOL_KEY).l('curl-creator');
   }
 
   create(req: FastifyRequest, route?: Omit<IFastMakerRoutePath, 'filePath'>): string | undefined {

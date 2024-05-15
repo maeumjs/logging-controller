@@ -1,8 +1,9 @@
 import { MAEUM_LOGGERS_SYMBOL_KEY } from '#/common/symbols/MAEUM_LOGGERS_SYMBOL_KEY';
-import type { AwilixContainer } from 'awilix';
+import type { MaeumLoggers } from '#/loggings/common/MaeumLoggers';
+import type { IClassContainer } from '@maeum/tools';
 
-export function interpretorErrorHandler(container: AwilixContainer) {
-  const logger = container.resolve(MAEUM_LOGGERS_SYMBOL_KEY).l('unhandle-exception');
+export function interpretorErrorHandler(container: IClassContainer) {
+  const logger = container.resolve<MaeumLoggers>(MAEUM_LOGGERS_SYMBOL_KEY).l('unhandle-exception');
 
   process.on('uncaughtException', (err) => {
     logger.$('uncaughtException: ', err.message);
