@@ -13,7 +13,7 @@ import { requestFlagsPlugin } from '#/http/plugin/requestFlagsPlugin';
 import type { MaeumLoggers } from '#/loggings/common/MaeumLoggers';
 import type { IMaeumLoggers } from '#/loggings/common/interfaces/IMaeumLogger';
 import type { IClassContainer } from '@maeum/tools';
-import formatISO from 'date-fns/formatISO';
+import { formatISO } from 'date-fns/formatISO';
 import type {
   FastifyInstance,
   FastifyReply,

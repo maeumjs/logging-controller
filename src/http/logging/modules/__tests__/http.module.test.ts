@@ -1,3 +1,4 @@
+import { container } from '#/common/__tests__/container';
 import { CE_LOGGING_ACTION_CODE } from '#/http/logging/const-enum/CE_LOGGING_ACTION_CODE';
 import { IHTTPLogRecordAction } from '#/http/logging/interfaces/IHTTPLogRecordAction';
 import { IHTTPLogRecordHandler } from '#/http/logging/interfaces/IHTTPLogRecordHandler';
@@ -5,10 +6,7 @@ import { IRequestLoggerOption } from '#/http/logging/interfaces/IRequestLoggerOp
 import { IRoutePath } from '#/http/logging/interfaces/IRoutePath';
 import { getRequestLoggerOption } from '#/http/logging/modules/getRequestLoggerOption';
 import { makeAsyncWinstonLoggers } from '#/loggings/winston/makeAsyncWinstonLoggers';
-import { createContainer } from 'awilix';
 import { beforeAll, describe, expect, it } from 'vitest';
-
-const container = createContainer();
 
 describe('getRequestLoggerOption', () => {
   beforeAll(async () => {
