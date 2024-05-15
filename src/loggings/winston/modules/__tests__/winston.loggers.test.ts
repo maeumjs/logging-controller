@@ -18,7 +18,7 @@ vi.mock('my-node-fp', async () => {
   };
 });
 
-describe('getSyncLoggers', () => {
+describe('getWinstonSyncLoggers', () => {
   it('sync function', async () => {
     const logApp = getWinstonSyncLoggers('api', (defaultOptions) => defaultOptions ?? {}, {
       levels: CE_WINSTON_DEFAULT_VALUE.LEVELS,
@@ -36,7 +36,7 @@ describe('getSyncLoggers', () => {
   });
 });
 
-describe('getAsyncLoggers', () => {
+describe('getWinstonAsyncLoggers', () => {
   it('async function', async () => {
     const logApp = await getWinstonAsyncLoggers(
       'api',
@@ -75,7 +75,7 @@ describe('getError', () => {
   });
 });
 
-describe('createLogger', () => {
+describe('WinstonLoggers', () => {
   it('async', async () => {
     const defaultName = 'app';
     const option: IWinstonLoggersOptions = {
@@ -95,6 +95,7 @@ describe('createLogger', () => {
     log.info({});
     log.debug({});
 
+    expect(winston.enableDebugMessage).toBeTruthy();
     expect(winston).toBeTruthy();
     expect(winston.loggers).toBeTruthy();
 
@@ -120,6 +121,7 @@ describe('createLogger', () => {
     log.info({});
     log.debug({});
 
+    expect(winston.enableDebugMessage).toBeTruthy();
     expect(winston).toBeTruthy();
     expect(winston.loggers).toBeTruthy();
 

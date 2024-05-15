@@ -1,7 +1,7 @@
+import type { TSyslogConfigLevels } from '#/loggings/winston/interfaces/TSyslogConfigLevels';
 import chalk from 'chalk';
-import type winston from 'winston';
 
-export const colors: Record<keyof winston.config.SyslogConfigSetLevels, chalk.ChalkFunction> = {
+export const colors: Record<TSyslogConfigLevels, chalk.ChalkFunction> = {
   emerg: chalk.red,
   alert: chalk.red,
   crit: chalk.red,

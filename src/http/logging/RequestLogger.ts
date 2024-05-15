@@ -1,7 +1,7 @@
 import type { ILogFormat } from '#/common/interfaces/ILogFormat';
 import { getError } from '#/common/modules/getError';
-import { CURL_CREATOR_SYMBOL_KEY } from '#/common/symbols/CURL_CREATOR_SYMBOL_KEY';
-import { MAEUM_LOGGERS_SYMBOL_KEY } from '#/common/symbols/MAEUM_LOGGERS_SYMBOL_KEY';
+import { $YMBOL_KEY_CURL_CREATOR } from '#/common/symbols/SYMBOL_KEY_CURL_CREATOR';
+import { $YMBOL_KEY_MAEUM_LOGGERS } from '#/common/symbols/SYMBOL_KEY_MAEUM_LOGGERS';
 import { getHttpMethod } from '#/http/common/modules/getHttpMethod';
 import { getRoutePathKey } from '#/http/common/modules/getRoutePathKey';
 import type { CurlCreator } from '#/http/curl/CurlCreator';
@@ -35,7 +35,7 @@ export class RequestLogger {
   constructor(option: IRequestLoggerOption, container: IClassContainer) {
     this.#option = option;
     this.#container = container;
-    this.#logger = container.resolve<MaeumLoggers>(MAEUM_LOGGERS_SYMBOL_KEY).l('request-logger');
+    this.#logger = container.resolve<MaeumLoggers>($YMBOL_KEY_MAEUM_LOGGERS).l('request-logger');
   }
 
   async logging(req: FastifyRequest, reply: FastifyReply) {
@@ -60,7 +60,7 @@ export class RequestLogger {
       }
 
       const err = req.getRequestError();
-      const curlCreator = this.#container.resolve<CurlCreator>(CURL_CREATOR_SYMBOL_KEY);
+      const curlCreator = this.#container.resolve<CurlCreator>($YMBOL_KEY_CURL_CREATOR);
 
       const action =
         this.#option.contents.actions.get(getRoutePathKey(route)) ?? this.#option.contents.default;

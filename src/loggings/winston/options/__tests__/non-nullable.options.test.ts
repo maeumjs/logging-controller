@@ -26,4 +26,18 @@ describe('getNonNullableOptions', () => {
     expect(options.defaultMeta).toBeTruthy();
     expect(options.transports).toBeTruthy();
   });
+
+  it('custom parameter', () => {
+    const options = getNonNullableOptions({
+      level: 'error',
+      levels: CE_WINSTON_DEFAULT_VALUE.LEVELS,
+      defaultMeta: { name: 'api' },
+      transports: [],
+    });
+
+    expect(options.level).toEqual('error');
+    expect(options.levels).toEqual(CE_WINSTON_DEFAULT_VALUE.LEVELS);
+    expect(options.defaultMeta).toBeTruthy();
+    expect(options.transports).toBeTruthy();
+  });
 });

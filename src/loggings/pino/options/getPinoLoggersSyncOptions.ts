@@ -14,11 +14,12 @@ export function getPinoLoggersSyncOptions(
   const next = Array.from(applications.entries()).reduce<
     Map<string, TPinoLoggersBootstrapSyncOption>
   >((aggregated, [name, application]) => {
-    if (name == null || application == null) {
+    if (application == null) {
       return aggregated;
     }
 
-    return { ...aggregated, [name]: application };
+    aggregated.set(name, application);
+    return aggregated;
   }, new Map<string, TPinoLoggersBootstrapSyncOption>());
 
   if (Object.keys(next).length <= 0) {

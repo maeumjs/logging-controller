@@ -13,7 +13,7 @@ export function getWinstonLoggersAsyncOptions(
   const next = Array.from(applications.entries()).reduce<
     Map<string, TWinstonLoggersAsyncBootstrapOption>
   >((aggregated, [name, application]) => {
-    if (name == null || application == null) {
+    if (application == null) {
       return aggregated;
     }
 
@@ -21,7 +21,7 @@ export function getWinstonLoggersAsyncOptions(
     return aggregated;
   }, new Map<string, TWinstonLoggersAsyncBootstrapOption>());
 
-  if (Object.keys(next).length <= 0) {
+  if (next.size <= 0) {
     const defaultConfig = getNonNullableOptions();
 
     return new Map([

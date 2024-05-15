@@ -1,7 +1,10 @@
 import { CE_WINSTON_DEFAULT_VALUE } from '#/loggings/winston/const-enum/CE_WINSTON_DEFAULT_VALUE';
-import type winston from 'winston';
+import type { TSyslogConfigLevels } from '#/loggings/winston/interfaces/TSyslogConfigLevels';
 
-export function getWinstonLevel(level?: unknown): keyof winston.config.SyslogConfigSetLevels {
+export function getWinstonLevel(
+  level?: unknown,
+  defaultLevel?: TSyslogConfigLevels,
+): TSyslogConfigLevels {
   switch (level) {
     case 'emerg':
     case 'alert':
@@ -13,6 +16,6 @@ export function getWinstonLevel(level?: unknown): keyof winston.config.SyslogCon
     case 'debug':
       return level;
     default:
-      return CE_WINSTON_DEFAULT_VALUE.LEVEL;
+      return defaultLevel ?? CE_WINSTON_DEFAULT_VALUE.LEVEL;
   }
 }

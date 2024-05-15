@@ -1,5 +1,5 @@
-import { MAEUM_LOGGERS_SYMBOL_KEY } from '#/common/symbols/MAEUM_LOGGERS_SYMBOL_KEY';
-import { WINSTON_LOGGERS_SYMBOL_KEY } from '#/common/symbols/WINSTON_LOGGERS_SYMBOL_KEY';
+import { $YMBOL_KEY_MAEUM_LOGGERS } from '#/common/symbols/SYMBOL_KEY_MAEUM_LOGGERS';
+import { $YMBOL_KEY_WINSTON_LOGGERS } from '#/common/symbols/SYMBOL_KEY_WINSTON_LOGGERS';
 import { PinoLoggers } from '#/loggings/pino/PinoLoggers';
 import type { IPinoLoggersOptions } from '#/loggings/pino/interfaces/IPinoLoggersOptions';
 import type { IPinoMaeumLogger } from '#/loggings/pino/interfaces/IPinoMaeumLogger';
@@ -40,8 +40,8 @@ export async function makePinoAsyncLoggers(
     defaultAppName: makeOptions?.defaultAppName,
   });
 
-  container.register(WINSTON_LOGGERS_SYMBOL_KEY, winstonLoggers);
-  container.register(MAEUM_LOGGERS_SYMBOL_KEY, winstonLoggers);
+  container.register($YMBOL_KEY_WINSTON_LOGGERS, winstonLoggers);
+  container.register($YMBOL_KEY_MAEUM_LOGGERS, winstonLoggers);
 
   return winstonLoggers;
 }
