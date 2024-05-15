@@ -4,7 +4,7 @@ import { IHTTPLogRecordHandler } from '#/http/logging/interfaces/IHTTPLogRecordH
 import { IRequestLoggerOption } from '#/http/logging/interfaces/IRequestLoggerOption';
 import { IRoutePath } from '#/http/logging/interfaces/IRoutePath';
 import { getRequestLoggerOption } from '#/http/logging/modules/getRequestLoggerOption';
-import { makeWinstonLoggers } from '#/loggings/winston/makeWinstonLoggers';
+import { makeAsyncWinstonLoggers } from '#/loggings/winston/makeAsyncWinstonLoggers';
 import { createContainer } from 'awilix';
 import { beforeAll, describe, expect, it } from 'vitest';
 
@@ -12,7 +12,7 @@ const container = createContainer();
 
 describe('getRequestLoggerOption', () => {
   beforeAll(async () => {
-    await makeWinstonLoggers(container);
+    await makeAsyncWinstonLoggers(container);
   });
 
   it('pass - nullable', () => {

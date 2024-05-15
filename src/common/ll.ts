@@ -1,5 +1,5 @@
 import { getDebugChannel } from '#/common/modules/getDebugChannel';
-import { noop } from '#/common/modules/noop';
+import { noop } from '@maeum/tools';
 import debug from 'debug';
 import { basenames } from 'my-node-fp';
 

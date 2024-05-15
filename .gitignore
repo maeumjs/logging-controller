@@ -105,3 +105,4 @@ dist
 
 .wireit
 test/case
+git-short.sh

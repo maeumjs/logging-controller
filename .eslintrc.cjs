@@ -122,8 +122,8 @@ module.exports = {
       files: [
         'src/loggings/winston/WinstonLoggers.ts',
         'src/loggings/winston/interfaces/IWintonLogger.ts',
-        'src/pino/PinoContainer.ts',
-        'src/pino/interfaces/IPinoLogger.ts',
+        'src/loggings/pino/PinoLoggers.ts',
+        'src/loggings/pino/interfaces/IPinoLogger.ts',
       ],
       rules: {
         '@typescript-eslint/no-explicit-any': ['off'],

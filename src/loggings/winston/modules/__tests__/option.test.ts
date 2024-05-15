@@ -1,9 +1,9 @@
-import { getWinstonContainerOptions } from '#/loggings/winston/options/getWinstonContainerOption';
+import { getWinstonLoggersSyncOptions } from '#/loggings/winston/options/getWinstonLoggersSyncOptions';
 import { describe, expect, it } from 'vitest';
 
 describe('getWinstonContainerOption', () => {
   it('pass undefined option', () => {
-    const options = getWinstonContainerOptions();
+    const options = getWinstonLoggersSyncOptions();
 
     expect(options).toBeTruthy();
   });

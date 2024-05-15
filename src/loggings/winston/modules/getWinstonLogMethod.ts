@@ -1,6 +1,6 @@
 import type winston from 'winston';
 
-export function getLogMethod(
+export function getWinstonLogMethod(
   level: keyof winston.config.SyslogConfigSetLevels,
   logger: winston.Logger,
 ) {

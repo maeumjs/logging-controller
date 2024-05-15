@@ -1,9 +1,9 @@
 import { ll } from '#/common/ll';
 import { getDebugChannel } from '#/common/modules/getDebugChannel';
 import { getError } from '#/common/modules/getError';
-import { noop } from '#/common/modules/noop';
 import { objectify } from '#/common/transforms/objectify';
 import { safeStringify } from '#/common/transforms/safeStringify';
+import { noop } from '@maeum/tools';
 import { describe, expect, it, vi } from 'vitest';
 
 describe('getLogContainerOption', () => {

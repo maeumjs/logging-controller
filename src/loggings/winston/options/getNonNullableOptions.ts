@@ -1,6 +1,6 @@
 import { CE_WINSTON_DEFAULT_VALUE } from '#/loggings/winston/const-enum/CE_WINSTON_DEFAULT_VALUE';
 import { getFormatter } from '#/loggings/winston/modules/getFormatter';
-import { createFileTransport } from '#/loggings/winston/transports/createFileTransport';
+import { makeWinstonFileTransport } from '#/loggings/winston/transports/makeWinstonFileTransport';
 import type winston from 'winston';
 
 export function getNonNullableOptions(
@@ -16,7 +16,7 @@ export function getNonNullableOptions(
     nullableOptions?.transports != null
       ? nullableOptions.transports
       : [
-          createFileTransport(
+          makeWinstonFileTransport(
             CE_WINSTON_DEFAULT_VALUE.LEVEL,
             CE_WINSTON_DEFAULT_VALUE.LOCAL_DIR,
             CE_WINSTON_DEFAULT_VALUE.FILENAME,
@@ -27,7 +27,7 @@ export function getNonNullableOptions(
   const transports =
     Array.isArray(transportArray) && transportArray.length <= 0
       ? [
-          createFileTransport(
+          makeWinstonFileTransport(
             CE_WINSTON_DEFAULT_VALUE.LEVEL,
             CE_WINSTON_DEFAULT_VALUE.LOCAL_DIR,
             CE_WINSTON_DEFAULT_VALUE.FILENAME,

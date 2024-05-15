@@ -1,12 +1,12 @@
 import type { ICurlCreatorOption } from '#/http/curl/interfaces/IRequestCurlCreatorOption';
 import type { getRequestLoggerOption } from '#/http/logging/modules/getRequestLoggerOption';
-import type { TWinstonLoggersBootstrapOptions } from '#/loggings/winston/interfaces/IWinstonContainerOption';
+import type { TPinoLoggersBootstrapAsyncOptions } from '#/loggings/pino/interfaces/TPinoLoggersBootstrapAsyncOptions';
 
-export interface IWinstonLoggingControllerOption<TASYNC extends boolean = false> {
-  winston?: {
+export interface IPinoAsyncLoggersOption {
+  pino?: {
     getEnableDebugMessage?: () => boolean;
     defaultAppName?: string;
-    options?: TWinstonLoggersBootstrapOptions<TASYNC>;
+    options?: TPinoLoggersBootstrapAsyncOptions;
   };
   request?: Parameters<typeof getRequestLoggerOption>[0];
   curl?: Partial<ICurlCreatorOption>;
