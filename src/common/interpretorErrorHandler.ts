@@ -1,9 +1,9 @@
-import { $YMBOL_KEY_MAEUM_LOGGERS } from '#/common/symbols/SYMBOL_KEY_MAEUM_LOGGERS';
+import { CE_DI } from '#/di/CE_DI';
 import type { MaeumLoggers } from '#/loggings/common/MaeumLoggers';
 import type { IClassContainer } from '@maeum/tools';
 
 export function interpretorErrorHandler(container: IClassContainer) {
-  const logger = container.resolve<MaeumLoggers>($YMBOL_KEY_MAEUM_LOGGERS).l('unhandle-exception');
+  const logger = container.resolve<MaeumLoggers>(CE_DI.MAEUM_LOGGERS).l('unhandle-exception');
 
   process.on('uncaughtException', (err) => {
     logger.$('uncaughtException: ', err.message);

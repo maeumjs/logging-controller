@@ -1,16 +1,13 @@
 import type { ILogFormat } from '#/common/interfaces/ILogFormat';
 import { getError } from '#/common/modules/getError';
-import { $YMBOL_KEY_CURL_CREATOR } from '#/common/symbols/SYMBOL_KEY_CURL_CREATOR';
-import { $YMBOL_KEY_MAEUM_LOGGERS } from '#/common/symbols/SYMBOL_KEY_MAEUM_LOGGERS';
+import { CE_DI } from '#/di/CE_DI';
 import { getHttpMethod } from '#/http/common/modules/getHttpMethod';
 import { getRoutePathKey } from '#/http/common/modules/getRoutePathKey';
-import type { CurlCreator } from '#/http/curl/CurlCreator';
 import { CE_REQUEST_LOGGING_RESULT_CODE } from '#/http/logging/const-enum/CE_REQUEST_LOGGING_RESULT_CODE';
 import type { IRequestLoggerOption } from '#/http/logging/interfaces/IRequestLoggerOption';
 import { getErrorLog } from '#/http/logging/modules/getErrorLog';
 import { getPayload } from '#/http/logging/modules/getPayload';
 import { requestFlagsPlugin } from '#/http/plugin/requestFlagsPlugin';
-import type { MaeumLoggers } from '#/loggings/common/MaeumLoggers';
 import type { IMaeumLoggers } from '#/loggings/common/interfaces/IMaeumLogger';
 import type { IClassContainer } from '@maeum/tools';
 import { formatISO } from 'date-fns/formatISO';
@@ -35,7 +32,7 @@ export class RequestLogger {
   constructor(option: IRequestLoggerOption, container: IClassContainer) {
     this.#option = option;
     this.#container = container;
-    this.#logger = container.resolve<MaeumLoggers>($YMBOL_KEY_MAEUM_LOGGERS).l('request-logger');
+    this.#logger = container.resolve(CE_DI.MAEUM_LOGGERS).l('request-logger');
   }
 
   async logging(req: FastifyRequest, reply: FastifyReply) {
@@ -60,7 +57,7 @@ export class RequestLogger {
       }
 
       const err = req.getRequestError();
-      const curlCreator = this.#container.resolve<CurlCreator>($YMBOL_KEY_CURL_CREATOR);
+      const curlCreator = this.#container.resolve(CE_DI.CURL_CREATOR);
 
       const action =
         this.#option.contents.actions.get(getRoutePathKey(route)) ?? this.#option.contents.default;
