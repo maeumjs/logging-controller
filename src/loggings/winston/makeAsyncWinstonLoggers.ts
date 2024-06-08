@@ -1,5 +1,4 @@
-import { $YMBOL_KEY_MAEUM_LOGGERS } from '#/common/symbols/SYMBOL_KEY_MAEUM_LOGGERS';
-import { $YMBOL_KEY_WINSTON_LOGGERS } from '#/common/symbols/SYMBOL_KEY_WINSTON_LOGGERS';
+import { CE_DI } from '#/di/CE_DI';
 import { WinstonLoggers } from '#/loggings/winston/WinstonLoggers';
 import type { IWinstonLoggersOptions } from '#/loggings/winston/interfaces/IWinstonLoggersOptions';
 import type { IWinstonMaeumLogger } from '#/loggings/winston/interfaces/IWinstonMaeumLogger';
@@ -44,8 +43,8 @@ export async function makeAsyncWinstonLoggers(
     defaultAppName: makeOptions?.defaultAppName,
   });
 
-  container.register($YMBOL_KEY_WINSTON_LOGGERS, winstonLoggers);
-  container.register($YMBOL_KEY_MAEUM_LOGGERS, winstonLoggers);
+  container.register(CE_DI.WINSTON_LOGGERS, winstonLoggers);
+  container.register(CE_DI.MAEUM_LOGGERS, winstonLoggers);
 
   return winstonLoggers;
 }

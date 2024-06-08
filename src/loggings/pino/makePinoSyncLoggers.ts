@@ -1,5 +1,4 @@
-import { $YMBOL_KEY_MAEUM_LOGGERS } from '#/common/symbols/SYMBOL_KEY_MAEUM_LOGGERS';
-import { $YMBOL_KEY_WINSTON_LOGGERS } from '#/common/symbols/SYMBOL_KEY_WINSTON_LOGGERS';
+import { CE_DI } from '#/di/CE_DI';
 import { PinoLoggers } from '#/loggings/pino/PinoLoggers';
 import type { IPinoMaeumLogger } from '#/loggings/pino/interfaces/IPinoMaeumLogger';
 import type { TPinoLoggersBootstrapSyncOptions } from '#/loggings/pino/interfaces/TPinoLoggersBootstrapSyncOptions';
@@ -26,14 +25,14 @@ export function makePinoSyncLoggers(
     return { ...aggregations, [name]: logger };
   }, new Map<string, IPinoMaeumLogger>());
 
-  const winstonLoggers = new PinoLoggers({
+  const pinoLoggers = new PinoLoggers({
     getEnableDebugMessage: makeOptions?.getEnableDebugMessage ?? (() => false),
     loggers,
     defaultAppName: makeOptions?.defaultAppName,
   });
 
-  container.register($YMBOL_KEY_WINSTON_LOGGERS, winstonLoggers);
-  container.register($YMBOL_KEY_MAEUM_LOGGERS, winstonLoggers);
+  container.register(CE_DI.PINO_LOGGERS, pinoLoggers);
+  container.register(CE_DI.MAEUM_LOGGERS, pinoLoggers);
 
-  return winstonLoggers;
+  return pinoLoggers;
 }
