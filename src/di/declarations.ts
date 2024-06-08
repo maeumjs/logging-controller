@@ -1,3 +1,5 @@
+/** @ctix-declaration */
+
 import type { CE_DI } from '#/di/CE_DI';
 import type { CurlCreator } from '#/http/curl/CurlCreator';
 import type { RequestLogger } from '#/http/logging/RequestLogger';
